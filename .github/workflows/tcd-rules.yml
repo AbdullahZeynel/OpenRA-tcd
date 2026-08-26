@@ -116,8 +116,11 @@ jobs:
       - name: H3 - DCO sign-off
         run: |
           set -euo pipefail
+          # jq's "m" flag means dotall, NOT multiline anchors, and its ^ anchors
+          # to the start of the whole string. A trailer on line 3 therefore never
+          # matched. (?m) inline is what actually anchors per line here.
           gh api "repos/$REPO/pulls/$PR/commits" --paginate \
-            -q '.[] | select((.commit.message | test("^Signed-off-by: .+ <.+@.+>"; "m")) | not) | "\(.sha[0:8]) \(.commit.message | split("\n")[0])"' \
+            -q '.[] | select((.commit.message | test("(?m)^Signed-off-by: .+ <.+@.+>")) | not) | "\(.sha[0:8]) \(.commit.message | split("\n")[0])"' \
             > /tmp/nodco.txt || true
           if [ -s /tmp/nodco.txt ]; then
             sed 's/^/  /' /tmp/nodco.txt
