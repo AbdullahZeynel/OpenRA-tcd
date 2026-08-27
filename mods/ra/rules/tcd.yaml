@@ -19,75 +19,180 @@ World:
 # Formation roles. Rank 0 is the front of the formation; higher ranks stand behind.
 # Anything without this trait is treated as Line, rank 1.
 
+# What each role shoots at first.
+#
+# RA gives every valid target the same priority (rules/defaults.yaml:180 sets
+# ValidTargets and no Priority at all), so AutoTarget falls back to whatever is
+# nearest and a rocket soldier empties itself into infantry. The engine already
+# has the mechanism to fix that: AutoTargetPriority is a conditional trait, an
+# actor may carry several, and ChooseTarget takes the highest priority match and
+# only uses range to break a tie (AutoTarget.cs:458).
+#
+# Priority 3 is what the unit exists to kill; 2 is acceptable; RA's own entries
+# stay at 1 and catch everything else. Nothing here is removed, only added to.
+#
+# This does not send units wandering. The scan radius is the weapon's own range
+# (AutoTarget.cs:312), and a unit on the default Defend stance is not allowed to
+# move to a target at all (AutoTarget.cs:146 and :55), so out-of-range targets
+# are filtered out before priority is ever consulted. A rocket soldier with a
+# tank in missile range and infantry at its feet shoots the tank; with the tank
+# out of range it shoots the infantry.
+#
+# The numbers are the tuning surface. Change them here.
+
 1TNK:
 	FormationRole:
 		Role: Armor
 		Rank: 0
+	AutoTargetPriority@TCD1:
+		ValidTargets: Vehicle
+		InvalidTargets: NoAutoTarget
+		Priority: 3
+	AutoTargetPriority@TCD2:
+		ValidTargets: Infantry
+		InvalidTargets: NoAutoTarget
+		Priority: 2
 
 2TNK:
 	FormationRole:
 		Role: Armor
 		Rank: 0
+	AutoTargetPriority@TCD1:
+		ValidTargets: Vehicle, Defense
+		InvalidTargets: NoAutoTarget
+		Priority: 3
 
 3TNK:
 	FormationRole:
 		Role: Armor
 		Rank: 0
+	AutoTargetPriority@TCD1:
+		ValidTargets: Vehicle, Defense
+		InvalidTargets: NoAutoTarget
+		Priority: 3
 
 4TNK:
 	FormationRole:
 		Role: Armor
 		Rank: 0
+	AutoTargetPriority@TCD1:
+		ValidTargets: Vehicle, Defense, AirborneActor
+		InvalidTargets: NoAutoTarget
+		Priority: 3
 
 APC:
 	FormationRole:
 		Role: Armor
 		Rank: 0
+	AutoTargetPriority@TCD1:
+		ValidTargets: Infantry
+		InvalidTargets: NoAutoTarget
+		Priority: 3
 
 E1:
 	FormationRole:
 		Role: Line
 		Rank: 1
+	AutoTargetPriority@TCD1:
+		ValidTargets: Infantry
+		InvalidTargets: NoAutoTarget
+		Priority: 3
 
 E4:
 	FormationRole:
 		Role: Line
 		Rank: 1
+	AutoTargetPriority@TCD1:
+		ValidTargets: Infantry
+		InvalidTargets: NoAutoTarget
+		Priority: 3
+	AutoTargetPriority@TCD2:
+		ValidTargets: Structure, Defense
+		InvalidTargets: NoAutoTarget
+		Priority: 2
 
 E7:
 	FormationRole:
 		Role: Line
 		Rank: 1
+	AutoTargetPriority@TCD1:
+		ValidTargets: Infantry
+		InvalidTargets: NoAutoTarget
+		Priority: 3
+	AutoTargetPriority@TCD2:
+		ValidTargets: Structure
+		InvalidTargets: NoAutoTarget
+		Priority: 2
 
 SHOK:
 	FormationRole:
 		Role: Line
 		Rank: 1
+	AutoTargetPriority@TCD1:
+		ValidTargets: Infantry
+		InvalidTargets: NoAutoTarget
+		Priority: 3
+	AutoTargetPriority@TCD2:
+		ValidTargets: Vehicle
+		InvalidTargets: NoAutoTarget
+		Priority: 2
 
 DOG:
 	FormationRole:
 		Role: Line
 		Rank: 1
+	AutoTargetPriority@TCD1:
+		ValidTargets: Infantry
+		InvalidTargets: NoAutoTarget
+		Priority: 3
 
 E2:
 	FormationRole:
 		Role: Skirmish
 		Rank: 2
+	AutoTargetPriority@TCD1:
+		ValidTargets: Infantry
+		InvalidTargets: NoAutoTarget
+		Priority: 3
+	AutoTargetPriority@TCD2:
+		ValidTargets: Structure, Defense
+		InvalidTargets: NoAutoTarget
+		Priority: 2
 
 JEEP:
 	FormationRole:
 		Role: Skirmish
 		Rank: 2
+	AutoTargetPriority@TCD1:
+		ValidTargets: Infantry
+		InvalidTargets: NoAutoTarget
+		Priority: 3
 
 E3:
 	FormationRole:
 		Role: Fire
 		Rank: 3
+	AutoTargetPriority@TCD1:
+		ValidTargets: Vehicle, Ship, AirborneActor
+		InvalidTargets: NoAutoTarget
+		Priority: 3
+	AutoTargetPriority@TCD2:
+		ValidTargets: Defense, Structure
+		InvalidTargets: NoAutoTarget
+		Priority: 2
 
 ARTY:
 	FormationRole:
 		Role: Fire
 		Rank: 3
+	AutoTargetPriority@TCD1:
+		ValidTargets: Structure, Defense
+		InvalidTargets: NoAutoTarget
+		Priority: 3
+	AutoTargetPriority@TCD2:
+		ValidTargets: Infantry
+		InvalidTargets: NoAutoTarget
+		Priority: 2
 
 E6:
 	FormationRole:
