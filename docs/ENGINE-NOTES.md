@@ -325,3 +325,47 @@ holds is **corrected, not deleted** — note what changed and when.
 - **Verified against:** f7dbaa1b
 - **Verified by:** @AbdullahZeynel — 2026-08-27
 - **Used by:** sprint 07 (maps)
+
+## A generator option with no value contributes no parameters
+
+- **Claim:** `MapGeneratorBase.GenerateParameterYaml` walks the generator's
+  options in ascending `Priority` and skips any option missing from
+  `MapGenerationArgs.Options`. Most of a generator's parameters arrive through
+  option groups the UI never shows: RA's `hidden_defaults` alone carries
+  `Mirror`, `Rotations` and around sixty others, and `hidden_tileset_overrides`
+  carries the per-tileset land and water tiles. Generating with only the options
+  a caller cares about therefore fails inside the parameter loader on the first
+  missing key. It does not fall back.
+- **Also:** a `MultiChoiceOption` value that is invalid for the current tileset
+  and player count is quietly replaced by that option's default, so a wrong
+  choice produces a map rather than an error. Callers that care have to check
+  `ValidChoices` themselves.
+- **Source:** OpenRA.Mods.Common/Traits/World/MapGeneratorBase.cs:99;
+  OpenRA.Mods.Common/MapGenerator/MapGeneratorOptions.cs:141;
+  mods/ra/rules/map-generators.yaml:7 and :78
+- **Verified against:** f7dbaa1b
+- **Verified by:** @AbdullahZeynel - 2026-08-27, after --generate-maps crashed
+  with "No node with key 'Mirror'"
+- **Used by:** sprint 07 (maps)
+
+## A generator option with no value contributes no parameters
+
+- **Claim:** `MapGeneratorBase.GenerateParameterYaml` walks the generator's
+  options in ascending `Priority` and skips any option missing from
+  `MapGenerationArgs.Options`. Most of a generator's parameters arrive through
+  option groups the UI never shows: RA's `hidden_defaults` alone carries
+  `Mirror`, `Rotations` and around sixty others, and `hidden_tileset_overrides`
+  carries the per-tileset land and water tiles. Generating with only the options
+  a caller cares about therefore fails inside the parameter loader on the first
+  missing key. It does not fall back.
+- **Also:** a `MultiChoiceOption` value that is invalid for the current tileset
+  and player count is quietly replaced by that option's default, so a wrong
+  choice produces a map rather than an error. Callers that care have to check
+  `ValidChoices` themselves.
+- **Source:** OpenRA.Mods.Common/Traits/World/MapGeneratorBase.cs:99;
+  OpenRA.Mods.Common/MapGenerator/MapGeneratorOptions.cs:141;
+  mods/ra/rules/map-generators.yaml:7 and :78
+- **Verified against:** f7dbaa1b
+- **Verified by:** @AbdullahZeynel - 2026-08-27, after --generate-maps crashed
+  with "No node with key 'Mirror'"
+- **Used by:** sprint 07 (maps)
