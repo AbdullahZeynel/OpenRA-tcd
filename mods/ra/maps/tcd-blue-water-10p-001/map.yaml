@@ -1,0 +1,203 @@
+MapFormat: 12
+
+RequiresMod: ra
+
+Title: Blue Water 001
+
+Author: Tactics & Command Dynamics
+
+Tileset: TEMPERAT
+
+MapSize: 162,162
+
+Bounds: 1,1,160,160
+
+Visibility: Lobby
+
+Categories: Conquest
+
+Players:
+	PlayerReference@Neutral:
+		Name: Neutral
+		OwnsWorld: True
+		NonCombatant: True
+		Faction: england
+	PlayerReference@Creeps:
+		Name: Creeps
+		NonCombatant: True
+		Faction: england
+		Enemies: Multi0, Multi1, Multi2, Multi3, Multi4, Multi5, Multi6, Multi7, Multi8, Multi9
+	PlayerReference@Multi0:
+		Name: Multi0
+		Playable: True
+		Faction: Random
+		Enemies: Creeps
+	PlayerReference@Multi1:
+		Name: Multi1
+		Playable: True
+		Faction: Random
+		Enemies: Creeps
+	PlayerReference@Multi2:
+		Name: Multi2
+		Playable: True
+		Faction: Random
+		Enemies: Creeps
+	PlayerReference@Multi3:
+		Name: Multi3
+		Playable: True
+		Faction: Random
+		Enemies: Creeps
+	PlayerReference@Multi4:
+		Name: Multi4
+		Playable: True
+		Faction: Random
+		Enemies: Creeps
+	PlayerReference@Multi5:
+		Name: Multi5
+		Playable: True
+		Faction: Random
+		Enemies: Creeps
+	PlayerReference@Multi6:
+		Name: Multi6
+		Playable: True
+		Faction: Random
+		Enemies: Creeps
+	PlayerReference@Multi7:
+		Name: Multi7
+		Playable: True
+		Faction: Random
+		Enemies: Creeps
+	PlayerReference@Multi8:
+		Name: Multi8
+		Playable: True
+		Faction: Random
+		Enemies: Creeps
+	PlayerReference@Multi9:
+		Name: Multi9
+		Playable: True
+		Faction: Random
+		Enemies: Creeps
+
+Actors:
+	Actor0: mine
+		Owner: Neutral
+		Location: 89,149
+	Actor1: mine
+		Owner: Neutral
+		Location: 18,110
+	Actor2: mine
+		Owner: Neutral
+		Location: 33,30
+	Actor3: mine
+		Owner: Neutral
+		Location: 114,20
+	Actor4: mine
+		Owner: Neutral
+		Location: 148,93
+	Actor5: mine
+		Owner: Neutral
+		Location: 104,143
+	Actor6: mine
+		Owner: Neutral
+		Location: 29,122
+	Actor7: mine
+		Owner: Neutral
+		Location: 25,44
+	Actor8: mine
+		Owner: Neutral
+		Location: 98,16
+	Actor9: mine
+		Owner: Neutral
+		Location: 147,77
+	Actor10: gmine
+		Owner: Neutral
+		Location: 89,147
+	Actor11: gmine
+		Owner: Neutral
+		Location: 20,109
+	Actor12: gmine
+		Owner: Neutral
+		Location: 34,32
+	Actor13: gmine
+		Owner: Neutral
+		Location: 113,22
+	Actor14: gmine
+		Owner: Neutral
+		Location: 146,93
+	Actor15: mine
+		Owner: Neutral
+		Location: 134,45
+	Actor16: mine
+		Owner: Neutral
+		Location: 131,120
+	Actor17: mine
+		Owner: Neutral
+		Location: 58,141
+	Actor18: mine
+		Owner: Neutral
+		Location: 16,78
+	Actor19: mine
+		Owner: Neutral
+		Location: 63,19
+	Actor20: mine
+		Owner: Neutral
+		Location: 121,58
+	Actor21: mine
+		Owner: Neutral
+		Location: 115,112
+	Actor22: mine
+		Owner: Neutral
+		Location: 61,123
+	Actor23: mine
+		Owner: Neutral
+		Location: 35,75
+	Actor24: mine
+		Owner: Neutral
+		Location: 72,35
+	Actor25: mine
+		Owner: Neutral
+		Location: 122,60
+	Actor26: mine
+		Owner: Neutral
+		Location: 113,113
+	Actor27: mine
+		Owner: Neutral
+		Location: 59,122
+	Actor28: mine
+		Owner: Neutral
+		Location: 35,73
+	Actor29: mine
+		Owner: Neutral
+		Location: 74,35
+	Actor30: mpspawn
+		Owner: Neutral
+		Location: 25,72
+	Actor31: mpspawn
+		Owner: Neutral
+		Location: 29,37
+	Actor32: mpspawn
+		Owner: Neutral
+		Location: 72,25
+	Actor33: mpspawn
+		Owner: Neutral
+		Location: 105,18
+	Actor34: mpspawn
+		Owner: Neutral
+		Location: 131,55
+	Actor35: mpspawn
+		Owner: Neutral
+		Location: 148,85
+	Actor36: mpspawn
+		Owner: Neutral
+		Location: 121,120
+	Actor37: mpspawn
+		Owner: Neutral
+		Location: 97,146
+	Actor38: mpspawn
+		Owner: Neutral
+		Location: 55,131
+	Actor39: mpspawn
+		Owner: Neutral
+		Location: 23,117
+
+Rules:
