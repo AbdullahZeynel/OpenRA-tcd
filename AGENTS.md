@@ -350,7 +350,34 @@ skimming it on a phone.
 
 ---
 
-## 11. If you are unsure about any of this
+## 11. Releases
+
+A merged pull request changes the repository. It does not change what anyone
+plays. The AppImage on the releases page is the only thing most people ever run,
+and until a release is cut, none of this work exists for them.
+
+Releases are deliberate, not automatic. Multiplayer needs every player on the
+same build, so releasing on every merge would have your friends re-downloading
+sixty megabytes several times a week and one of them always a version behind.
+Cut one when there is something worth playing.
+
+1. `tcd` is green and everything intended is merged.
+2. Close `[Unreleased]` in `CHANGELOG.md` into a version heading with today's
+   date, and open a fresh empty `[Unreleased]`.
+3. Build the Red Alert AppImage. `packaging/linux/buildpackage.sh` builds cnc and
+   d2k as well; comment those two lines out for the build and restore the file
+   with `git checkout --` afterwards. Sprint 12 removes this step.
+4. Launch it and play one skirmish. A release nobody launched is a rumour.
+5. Tag `tcd-x.y.z`, push the tag, publish the release with the AppImage attached
+   and the changelog section as its notes.
+6. Tell whoever you play with. They need the same build.
+
+The patch digit is for fixes, the minor digit for anything that changes what a
+player can do. There is no major digit until there is a reason for one.
+
+---
+
+## 12. If you are unsure about any of this
 
 Ask.
 
