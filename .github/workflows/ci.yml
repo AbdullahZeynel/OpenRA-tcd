@@ -2,6 +2,7 @@ name: Continuous Integration
 
 on:
   push:
+    branches: [ tcd, bleed ]
     paths-ignore:
       - '*.md'
   pull_request:
@@ -41,6 +42,11 @@ jobs:
   windows:
     name: Windows (.NET 10.0)
     runs-on: windows-2022
+
+    # This fork ships a Linux AppImage and nothing else, and the Windows job is
+    # the slowest by some way. Run it after a merge rather than in front of one:
+    # a break is found within minutes and fixed forward.
+    if: github.event_name == 'push'
 
     steps:
       - name: Clone Repository
