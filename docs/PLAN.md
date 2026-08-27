@@ -706,37 +706,44 @@ screen, the changelog covers every merged PR, section 7 matches a real diff of
 ### Sprint 07 — Maps
 
 Red Alert ships 74 map folders and 38 of them are campaign missions, so the
-skirmish rotation is thin. That is the problem players actually feel.
+skirmish rotation was thin. That is the problem players actually felt.
 
-Most of the machinery is already in the engine, and a play test confirmed the
-part that mattered: a map generated in the lobby reaches every client, because
-OpenRA sends the generation recipe rather than the map file and each client
-builds an identical copy. There is no transfer and no wait. Community maps
-download by hash from the Resource Center when a server uses one.
+Most of the machinery was already in the engine, and a play test settled the part
+that mattered: a map generated in the lobby reaches every client, because OpenRA
+sends the generation recipe rather than the map file and each client builds an
+identical copy. No transfer, no wait.
 
-What is missing is the tuning. The generator exposes `Players: 2, 4, 6, 8, 10,
-12, 14, 16` and roughly seventy other parameters, all at their generic defaults,
-so a balanced eight-player map means setting a wall of options by hand every
-time.
+This sprint first planned presets, a TCD entry in the terrain dropdown bundling
+the settings for a large game. That was dropped, and rightly. The generator is
+mature; a preset saves four clicks and adds nothing a player could not already
+do. Touching a working system for that is not a trade worth making.
 
-- `mods/ra/rules/tcd-map-generators.yaml` — our own presets on top of
-  `^MapGenerators`, aimed at the large games this fork gets played in: eight
-  players open, ten players island, narrow passes, open desert. Pure YAML, no C#.
-- A curated map pack. Generate with those presets, play them, throw away the bad
-  ones, and put the survivors in `mods/ra/maps/`. Anything shipped inside the
-  AppImage is on every player's machine with no download and no licence
-  question.
+What was built instead is the tooling to curate a pack, and the pack:
 
-**Done when** a player opens the map chooser, picks one TCD preset, and gets a
-balanced eight-player map without touching another setting — and the shipped
-pack has enough large maps to run a night of games without repeating one.
+- `--generate-maps`, a utility command that runs the generator headlessly and
+  writes each map beside a preview image, so a batch is judged by looking at
+  pictures rather than opening the game a hundred times (#11).
+- `tcd-map-recipes.sh`, twenty recipes. Ten vary the terrain, ten vary the
+  economy — no ore at all with oil derricks as the entire income, a
+  mountain-walled arena, gems everywhere, a town at maximum civilian density
+  (#11).
+- 85 maps from those recipes, eight to sixteen players, shipped in
+  `mods/ra/maps/` and therefore inside the AppImage: no download, no licence
+  question (#13). Fifteen of the hundred attempts could not place valid spawns
+  on the harder settings and were dropped rather than shipped broken.
 
-**Not in this sprint.** An in-game browser for the 23,000 community maps. The
-Resource Center's API documents lookup by hash and by id and nothing else — no
-search, no filter, no pagination — so a browser would need an index we curate and
-host ourselves. Revisit once the presets and the pack are in and we know whether
-anyone still wants it. Bundling community maps is out of the question regardless:
-the Resource Center states no licence, so those maps stay with their authors.
+The scope job had to learn shell patterns on the way: declaring a hundred maps
+file by file would have been 255 lines of manifest (#12).
+
+**Done.** The pack runs a night of games without repeating a map.
+
+**Not done, deliberately.** An in-game browser for the 23,000 community maps.
+The Resource Center's API documents lookup by hash and by id and nothing else, so
+a browser would need an index we curate and host. Bundling those maps is out of
+the question regardless: the site states no licence, so they stay with their
+authors. A server can already advertise a map pool that clients download from,
+which covers most of the want.
+
 
 ### Sprint 08 — Formation-preserving movement
 
