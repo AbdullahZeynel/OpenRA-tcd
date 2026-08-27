@@ -1,0 +1,97 @@
+name: TCD Release
+
+# A tag is the only thing that publishes. Merging changes the repository; tagging
+# says this is worth playing. The server image is built from the same commit as
+# the AppImage on purpose: OpenRA is lockstep, so a server running anything other
+# than what the players are running is a desync waiting to be reported as a bug.
+on:
+  push:
+    tags:
+      - 'tcd-*'
+
+permissions:
+  contents: write   # create the draft release and upload to it
+  packages: write   # push the server image to ghcr.io
+
+jobs:
+  appimage:
+    name: Red Alert AppImage
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v7
+
+      - name: Install .NET 10.0
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Build
+        run: |
+          set -euo pipefail
+
+          # buildpackage.sh builds Tiberian Dawn and Dune 2000 as well. This fork
+          # ships Red Alert alone, so those two lines are commented out for the
+          # length of this run. The file is upstream's and stays untouched in the
+          # repository; doing it here is what takes the step away from a person.
+          sed -i 's|^build_appimage "cnc"|#&|; s|^build_appimage "d2k"|#&|' packaging/linux/buildpackage.sh
+
+          sudo apt-get install -y desktop-file-utils
+          mkdir -p build/linux
+
+          # A client only joins a server reporting the same version string, and
+          # the container is built with release-<tag> for that reason. Keep the
+          # two equal or the release cannot play against its own server.
+          ./packaging/linux/buildpackage.sh "release-${GITHUB_REF_NAME}" "${PWD}/build/linux"
+
+          ls -la build/linux
+
+      - name: Publish as a draft
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          # Deliberately a draft. CI does the labour; a person decides whether it
+          # ships, which is the rule in AGENTS.md section 11.
+          if ! gh release view "${GITHUB_REF_NAME}" --repo "${{ github.repository }}" > /dev/null 2>&1; then
+            gh release create "${GITHUB_REF_NAME}" \
+              --repo "${{ github.repository }}" \
+              --title "${GITHUB_REF_NAME}" \
+              --draft \
+              --generate-notes
+          fi
+
+          gh release upload "${GITHUB_REF_NAME}" build/linux/*.AppImage \
+            --repo "${{ github.repository }}" --clobber
+
+  image:
+    name: Server image
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v7
+
+      - name: Work out the image name
+        # Registry paths are lower case and the owner name is not.
+        run: echo "IMAGE=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/openra-tcd-server" >> "${GITHUB_ENV}"
+
+      - name: Sign in to the registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          build-args: |
+            VERSION=release-${{ github.ref_name }}
+          tags: |
+            ${{ env.IMAGE }}:${{ github.ref_name }}
+            ${{ env.IMAGE }}:latest
