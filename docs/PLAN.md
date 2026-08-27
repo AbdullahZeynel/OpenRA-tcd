@@ -777,18 +777,26 @@ Every release so far has been built on a laptop: comment two lines out of
 `packaging/linux/buildpackage.sh`, run it, restore the file, upload by hand. That
 is four chances to get it wrong, and it ties the artefact to one machine.
 
-- Tagging `tcd-x.y.z` builds the Red Alert AppImage and publishes the release.
-- Merging to `tcd` builds the server image and pushes it to a registry, so the
-  deployment pulls an image rather than compiling from source.
-- `packaging/linux/buildpackage.sh` builds Red Alert alone. This fork has no use
-  for the other two mods, and commenting them out by hand every time is the step
-  this sprint deletes.
+- Tagging `tcd-x.y.z` builds the Red Alert AppImage and attaches it to a draft
+  release, and builds the server image from that same commit and pushes it to a
+  registry, so a deployment pulls an image rather than compiling from source.
+- The two mods this fork does not ship are commented out of
+  `packaging/linux/buildpackage.sh` for the length of the run. Upstream's file
+  stays untouched; the manual step goes away all the same.
 
-The AppImage is not built on every merge. Sixty megabytes per merge is waste, and
-multiplayer needs everyone on one build, so a release stays a deliberate act.
+**The image is built from the tag, not from every merge.** The plan first said
+merge, and that was wrong. OpenRA is lockstep: a server running the tip of `tcd`
+while its players run a released AppImage is two different programs agreeing to
+simulate the same game, and the desync that follows is close to untraceable.
+Building both from one commit is what makes them the same program. A server on
+the tip of `tcd` is a separate thing, with its own tag, if we ever want one.
 
-**Done when** pushing a tag produces a downloadable AppImage, and merging to `tcd`
-produces a fresh server image, with nobody opening a terminal.
+The AppImage is not built on every merge either. Sixty megabytes per merge is
+waste, and multiplayer needs everyone on one build, so a release stays a
+deliberate act - the draft is CI's work, publishing it is a person's.
+
+**Done when** pushing a tag produces a draft release holding a working AppImage
+and a matching server image in the registry, with nobody opening a terminal.
 
 ### Sprint 10 — Target priority by role
 
