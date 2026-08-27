@@ -348,24 +348,31 @@ holds is **corrected, not deleted** — note what changed and when.
   with "No node with key 'Mirror'"
 - **Used by:** sprint 07 (maps)
 
-## A generator option with no value contributes no parameters
+## AutoTargetPriority needs AutoTarget, and rules remove traits one name at a time
 
-- **Claim:** `MapGeneratorBase.GenerateParameterYaml` walks the generator's
-  options in ascending `Priority` and skips any option missing from
-  `MapGenerationArgs.Options`. Most of a generator's parameters arrive through
-  option groups the UI never shows: RA's `hidden_defaults` alone carries
-  `Mirror`, `Rotations` and around sixty others, and `hidden_tileset_overrides`
-  carries the per-tileset land and water tiles. Generating with only the options
-  a caller cares about therefore fails inside the parameter loader on the first
-  missing key. It does not fall back.
-- **Also:** a `MultiChoiceOption` value that is invalid for the current tileset
-  and player count is quietly replaced by that option's default, so a wrong
-  choice produces a map rather than an error. Callers that care have to check
-  `ValidChoices` themselves.
-- **Source:** OpenRA.Mods.Common/Traits/World/MapGeneratorBase.cs:99;
-  OpenRA.Mods.Common/MapGenerator/MapGeneratorOptions.cs:141;
-  mods/ra/rules/map-generators.yaml:7 and :78
+- **Claim:** `AutoTargetPriority` requires `AutoTarget`. An actor carrying a
+  priority whose `AutoTarget` has been removed does not fail quietly - it fails
+  to construct, and every map using that actor fails with it.
+- **Why that happens by accident:** RA's own rules strip `AutoTarget` from a few
+  actors and then remove the priority traits that came with it **by name**.
+  `campaign-rules.yaml:63` defines `e7.noautotarget`, which inherits `E7`, writes
+  `-AutoTarget:` and then removes the two upstream `AutoTargetPriority@...`
+  instances it knows about. A removal names one instance; it cannot name an
+  instance added later. So a priority added to a base actor in mod rules is
+  inherited by the derived actor, arrives without `AutoTarget`, and breaks it.
+- **How to check before adding one:** grep `-AutoTarget:` across `mods/ra`. At
+  `ENGINE_BASE` the actors that strip it are `E7` (campaign rules), `GNRL`,
+  `VOLK` and `PBOX`. Giving any of those a priority means also adding a matching
+  `-AutoTargetPriority@...` wherever the parent is stripped. Leaving them out of
+  the priorities entirely is the smaller change, and the one we made.
+- **Also:** priority strictly beats range in `ChooseTarget`, and range only
+  separates targets of equal priority. The scan radius stays the weapon's maximum
+  range and a unit on Defend stance may not move, so raising a priority never
+  sends a unit walking towards what it prefers.
+- **Source:** OpenRA.Mods.Common/Traits/AutoTargetPriority.cs:18;
+  OpenRA.Mods.Common/Traits/AutoTarget.cs:458, :312, :146;
+  mods/ra/rules/campaign-rules.yaml:63
 - **Verified against:** f7dbaa1b
-- **Verified by:** @AbdullahZeynel - 2026-08-27, after --generate-maps crashed
-  with "No node with key 'Mirror'"
-- **Used by:** sprint 07 (maps)
+- **Verified by:** @AbdullahZeynel - 2026-08-27, after `make test` reported
+  ``Actor `e7.noautotarget` is not constructible ... Errors: 61``
+- **Used by:** sprint 10 (target priority)
