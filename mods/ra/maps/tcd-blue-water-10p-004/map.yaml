@@ -1,0 +1,227 @@
+MapFormat: 12
+
+RequiresMod: ra
+
+Title: Blue Water 004
+
+Author: Tactics & Command Dynamics
+
+Tileset: TEMPERAT
+
+MapSize: 162,162
+
+Bounds: 1,1,160,160
+
+Visibility: Lobby
+
+Categories: Conquest
+
+Players:
+	PlayerReference@Neutral:
+		Name: Neutral
+		OwnsWorld: True
+		NonCombatant: True
+		Faction: england
+	PlayerReference@Creeps:
+		Name: Creeps
+		NonCombatant: True
+		Faction: england
+		Enemies: Multi0, Multi1, Multi2, Multi3, Multi4, Multi5, Multi6, Multi7, Multi8, Multi9
+	PlayerReference@Multi0:
+		Name: Multi0
+		Playable: True
+		Faction: Random
+		Enemies: Creeps
+	PlayerReference@Multi1:
+		Name: Multi1
+		Playable: True
+		Faction: Random
+		Enemies: Creeps
+	PlayerReference@Multi2:
+		Name: Multi2
+		Playable: True
+		Faction: Random
+		Enemies: Creeps
+	PlayerReference@Multi3:
+		Name: Multi3
+		Playable: True
+		Faction: Random
+		Enemies: Creeps
+	PlayerReference@Multi4:
+		Name: Multi4
+		Playable: True
+		Faction: Random
+		Enemies: Creeps
+	PlayerReference@Multi5:
+		Name: Multi5
+		Playable: True
+		Faction: Random
+		Enemies: Creeps
+	PlayerReference@Multi6:
+		Name: Multi6
+		Playable: True
+		Faction: Random
+		Enemies: Creeps
+	PlayerReference@Multi7:
+		Name: Multi7
+		Playable: True
+		Faction: Random
+		Enemies: Creeps
+	PlayerReference@Multi8:
+		Name: Multi8
+		Playable: True
+		Faction: Random
+		Enemies: Creeps
+	PlayerReference@Multi9:
+		Name: Multi9
+		Playable: True
+		Faction: Random
+		Enemies: Creeps
+
+Actors:
+	Actor0: t03
+		Owner: Neutral
+		Location: 141,157
+	Actor1: t05
+		Owner: Neutral
+		Location: 142,157
+	Actor2: t13
+		Owner: Neutral
+		Location: 143,156
+	Actor3: mine
+		Owner: Neutral
+		Location: 112,133
+	Actor4: mine
+		Owner: Neutral
+		Location: 41,127
+	Actor5: mine
+		Owner: Neutral
+		Location: 24,57
+	Actor6: mine
+		Owner: Neutral
+		Location: 86,20
+	Actor7: mine
+		Owner: Neutral
+		Location: 140,67
+	Actor8: mine
+		Owner: Neutral
+		Location: 113,135
+	Actor9: mine
+		Owner: Neutral
+		Location: 39,128
+	Actor10: mine
+		Owner: Neutral
+		Location: 22,56
+	Actor11: mine
+		Owner: Neutral
+		Location: 86,17
+	Actor12: mine
+		Owner: Neutral
+		Location: 142,66
+	Actor13: mine
+		Owner: Neutral
+		Location: 114,133
+	Actor14: mine
+		Owner: Neutral
+		Location: 41,129
+	Actor15: mine
+		Owner: Neutral
+		Location: 23,58
+	Actor16: mine
+		Owner: Neutral
+		Location: 84,18
+	Actor17: mine
+		Owner: Neutral
+		Location: 141,65
+	Actor18: mine
+		Owner: Neutral
+		Location: 89,114
+	Actor19: mine
+		Owner: Neutral
+		Location: 51,99
+	Actor20: mine
+		Owner: Neutral
+		Location: 54,58
+	Actor21: mine
+		Owner: Neutral
+		Location: 93,48
+	Actor22: mine
+		Owner: Neutral
+		Location: 115,83
+	Actor23: mine
+		Owner: Neutral
+		Location: 89,108
+	Actor24: mine
+		Owner: Neutral
+		Location: 57,97
+	Actor25: mine
+		Owner: Neutral
+		Location: 57,63
+	Actor26: mine
+		Owner: Neutral
+		Location: 90,53
+	Actor27: mine
+		Owner: Neutral
+		Location: 109,81
+	Actor28: mine
+		Owner: Neutral
+		Location: 88,110
+	Actor29: mine
+		Owner: Neutral
+		Location: 55,97
+	Actor30: mine
+		Owner: Neutral
+		Location: 57,61
+	Actor31: mine
+		Owner: Neutral
+		Location: 92,52
+	Actor32: mine
+		Owner: Neutral
+		Location: 111,82
+	Actor33: oilb
+		Owner: Neutral
+		Location: 75,78
+	Actor34: oilb
+		Owner: Neutral
+		Location: 80,75
+	Actor35: oilb
+		Owner: Neutral
+		Location: 85,79
+	Actor36: oilb
+		Owner: Neutral
+		Location: 83,85
+	Actor37: oilb
+		Owner: Neutral
+		Location: 77,84
+	Actor38: mpspawn
+		Owner: Neutral
+		Location: 15,59
+	Actor39: mpspawn
+		Owner: Neutral
+		Location: 49,66
+	Actor40: mpspawn
+		Owner: Neutral
+		Location: 81,11
+	Actor41: mpspawn
+		Owner: Neutral
+		Location: 85,46
+	Actor42: mpspawn
+		Owner: Neutral
+		Location: 147,59
+	Actor43: mpspawn
+		Owner: Neutral
+		Location: 115,74
+	Actor44: mpspawn
+		Owner: Neutral
+		Location: 121,137
+	Actor45: mpspawn
+		Owner: Neutral
+		Location: 97,111
+	Actor46: mpspawn
+		Owner: Neutral
+		Location: 40,137
+	Actor47: mpspawn
+		Owner: Neutral
+		Location: 57,106
+
+Rules:

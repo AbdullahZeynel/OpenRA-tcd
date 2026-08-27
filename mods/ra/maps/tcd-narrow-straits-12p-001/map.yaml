@@ -1,0 +1,363 @@
+MapFormat: 12
+
+RequiresMod: ra
+
+Title: Narrow Straits 001
+
+Author: Tactics & Command Dynamics
+
+Tileset: TEMPERAT
+
+MapSize: 162,162
+
+Bounds: 1,1,160,160
+
+Visibility: Lobby
+
+Categories: Conquest
+
+Players:
+	PlayerReference@Neutral:
+		Name: Neutral
+		OwnsWorld: True
+		NonCombatant: True
+		Faction: england
+	PlayerReference@Creeps:
+		Name: Creeps
+		NonCombatant: True
+		Faction: england
+		Enemies: Multi0, Multi1, Multi2, Multi3, Multi4, Multi5, Multi6, Multi7, Multi8, Multi9, Multi10, Multi11
+	PlayerReference@Multi0:
+		Name: Multi0
+		Playable: True
+		Faction: Random
+		Enemies: Creeps
+	PlayerReference@Multi1:
+		Name: Multi1
+		Playable: True
+		Faction: Random
+		Enemies: Creeps
+	PlayerReference@Multi2:
+		Name: Multi2
+		Playable: True
+		Faction: Random
+		Enemies: Creeps
+	PlayerReference@Multi3:
+		Name: Multi3
+		Playable: True
+		Faction: Random
+		Enemies: Creeps
+	PlayerReference@Multi4:
+		Name: Multi4
+		Playable: True
+		Faction: Random
+		Enemies: Creeps
+	PlayerReference@Multi5:
+		Name: Multi5
+		Playable: True
+		Faction: Random
+		Enemies: Creeps
+	PlayerReference@Multi6:
+		Name: Multi6
+		Playable: True
+		Faction: Random
+		Enemies: Creeps
+	PlayerReference@Multi7:
+		Name: Multi7
+		Playable: True
+		Faction: Random
+		Enemies: Creeps
+	PlayerReference@Multi8:
+		Name: Multi8
+		Playable: True
+		Faction: Random
+		Enemies: Creeps
+	PlayerReference@Multi9:
+		Name: Multi9
+		Playable: True
+		Faction: Random
+		Enemies: Creeps
+	PlayerReference@Multi10:
+		Name: Multi10
+		Playable: True
+		Faction: Random
+		Enemies: Creeps
+	PlayerReference@Multi11:
+		Name: Multi11
+		Playable: True
+		Faction: Random
+		Enemies: Creeps
+
+Actors:
+	Actor0: mine
+		Owner: Neutral
+		Location: 44,126
+	Actor1: mine
+		Owner: Neutral
+		Location: 59,26
+	Actor2: mine
+		Owner: Neutral
+		Location: 138,89
+	Actor3: mine
+		Owner: Neutral
+		Location: 55,144
+	Actor4: mine
+		Owner: Neutral
+		Location: 38,27
+	Actor5: mine
+		Owner: Neutral
+		Location: 148,71
+	Actor6: mine
+		Owner: Neutral
+		Location: 56,140
+	Actor7: mine
+		Owner: Neutral
+		Location: 41,30
+	Actor8: mine
+		Owner: Neutral
+		Location: 144,72
+	Actor9: mine
+		Owner: Neutral
+		Location: 108,45
+	Actor10: mine
+		Owner: Neutral
+		Location: 98,122
+	Actor11: mine
+		Owner: Neutral
+		Location: 36,75
+	Actor12: gmine
+		Owner: Neutral
+		Location: 111,61
+	Actor13: gmine
+		Owner: Neutral
+		Location: 82,117
+	Actor14: gmine
+		Owner: Neutral
+		Location: 48,64
+	Actor15: mine
+		Owner: Neutral
+		Location: 111,45
+	Actor16: mine
+		Owner: Neutral
+		Location: 96,125
+	Actor17: mine
+		Owner: Neutral
+		Location: 35,72
+	Actor18: mine
+		Owner: Neutral
+		Location: 24,108
+	Actor19: mine
+		Owner: Neutral
+		Location: 85,18
+	Actor20: mine
+		Owner: Neutral
+		Location: 133,115
+	Actor21: mine
+		Owner: Neutral
+		Location: 22,108
+	Actor22: mine
+		Owner: Neutral
+		Location: 86,16
+	Actor23: mine
+		Owner: Neutral
+		Location: 134,117
+	Actor24: mine
+		Owner: Neutral
+		Location: 22,110
+	Actor25: mine
+		Owner: Neutral
+		Location: 84,15
+	Actor26: mine
+		Owner: Neutral
+		Location: 135,116
+	Actor27: mine
+		Owner: Neutral
+		Location: 71,52
+	Actor28: mine
+		Owner: Neutral
+		Location: 110,86
+	Actor29: mine
+		Owner: Neutral
+		Location: 61,103
+	Actor30: mine
+		Owner: Neutral
+		Location: 69,38
+	Actor31: mine
+		Owner: Neutral
+		Location: 123,92
+	Actor32: mine
+		Owner: Neutral
+		Location: 50,112
+	Actor33: mine
+		Owner: Neutral
+		Location: 54,55
+	Actor34: mine
+		Owner: Neutral
+		Location: 116,70
+	Actor35: mine
+		Owner: Neutral
+		Location: 72,116
+	Actor36: mine
+		Owner: Neutral
+		Location: 84,64
+	Actor37: mine
+		Owner: Neutral
+		Location: 93,92
+	Actor38: mine
+		Owner: Neutral
+		Location: 64,86
+	Actor39: mine
+		Owner: Neutral
+		Location: 108,136
+	Actor40: mine
+		Owner: Neutral
+		Location: 19,77
+	Actor41: mine
+		Owner: Neutral
+		Location: 115,29
+	Actor42: mine
+		Owner: Neutral
+		Location: 104,136
+	Actor43: mine
+		Owner: Neutral
+		Location: 21,73
+	Actor44: mine
+		Owner: Neutral
+		Location: 117,32
+	Actor45: mine
+		Owner: Neutral
+		Location: 21,51
+	Actor46: mine
+		Owner: Neutral
+		Location: 136,44
+	Actor47: mine
+		Owner: Neutral
+		Location: 85,147
+	Actor48: mine
+		Owner: Neutral
+		Location: 21,55
+	Actor49: mine
+		Owner: Neutral
+		Location: 132,42
+	Actor50: mine
+		Owner: Neutral
+		Location: 88,145
+	Actor51: mine
+		Owner: Neutral
+		Location: 97,73
+	Actor52: mine
+		Owner: Neutral
+		Location: 79,99
+	Actor53: mine
+		Owner: Neutral
+		Location: 66,70
+	Actor54: oilb
+		Owner: Neutral
+		Location: 82,53
+	Actor55: oilb
+		Owner: Neutral
+		Location: 102,95
+	Actor56: oilb
+		Owner: Neutral
+		Location: 56,92
+	Actor57: oilb
+		Owner: Neutral
+		Location: 135,137
+	Actor58: oilb
+		Owner: Neutral
+		Location: 3,99
+	Actor59: oilb
+		Owner: Neutral
+		Location: 102,4
+	Actor60: oilb
+		Owner: Neutral
+		Location: 26,136
+	Actor61: oilb
+		Owner: Neutral
+		Location: 58,5
+	Actor62: oilb
+		Owner: Neutral
+		Location: 156,98
+	Actor63: oilb
+		Owner: Neutral
+		Location: 3,60
+	Actor64: oilb
+		Owner: Neutral
+		Location: 136,23
+	Actor65: oilb
+		Owner: Neutral
+		Location: 101,157
+	Actor66: oilb
+		Owner: Neutral
+		Location: 107,97
+	Actor67: oilb
+		Owner: Neutral
+		Location: 52,95
+	Actor68: oilb
+		Owner: Neutral
+		Location: 81,48
+	Actor69: oilb
+		Owner: Neutral
+		Location: 132,99
+	Actor70: oilb
+		Owner: Neutral
+		Location: 38,116
+	Actor71: oilb
+		Owner: Neutral
+		Location: 70,26
+	Actor72: oilb
+		Owner: Neutral
+		Location: 157,65
+	Actor73: oilb
+		Owner: Neutral
+		Location: 55,154
+	Actor74: oilb
+		Owner: Neutral
+		Location: 28,21
+	Actor75: oilb
+		Owner: Neutral
+		Location: 105,113
+	Actor76: oilb
+		Owner: Neutral
+		Location: 39,85
+	Actor77: oilb
+		Owner: Neutral
+		Location: 96,42
+	Actor78: mpspawn
+		Owner: Neutral
+		Location: 39,64
+	Actor79: mpspawn
+		Owner: Neutral
+		Location: 62,47
+	Actor80: mpspawn
+		Owner: Neutral
+		Location: 49,22
+	Actor81: mpspawn
+		Owner: Neutral
+		Location: 83,7
+	Actor82: mpspawn
+		Owner: Neutral
+		Location: 116,53
+	Actor83: mpspawn
+		Owner: Neutral
+		Location: 119,81
+	Actor84: mpspawn
+		Owner: Neutral
+		Location: 147,82
+	Actor85: mpspawn
+		Owner: Neutral
+		Location: 143,119
+	Actor86: mpspawn
+		Owner: Neutral
+		Location: 87,125
+	Actor87: mpspawn
+		Owner: Neutral
+		Location: 61,113
+	Actor88: mpspawn
+		Owner: Neutral
+		Location: 46,137
+	Actor89: mpspawn
+		Owner: Neutral
+		Location: 16,115
+
+Rules:
