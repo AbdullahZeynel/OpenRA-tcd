@@ -50,3 +50,6 @@ update.log
 
 # IntelliJ files
 .idea
+
+# TCD dedicated server settings. .env.example is the committed one.
+.env

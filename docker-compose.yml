@@ -1,13 +1,21 @@
 # Tactics & Command Dynamics dedicated server.
 #
+#     cp .env.example .env     # edit it, then
 #     docker compose up -d --build
 #
-# On Coolify, deploy this as a Docker Compose resource and map port 1234 as a
-# raw TCP port. There is no HTTP endpoint to route: the server speaks OpenRA's
-# own protocol, so a domain and a reverse proxy have nothing to do here.
+# Everything an operator changes lives in .env next to this file. Compose reads
+# it automatically and substitutes the values below; without one, every default
+# here applies and the server still starts.
 #
-# With AdvertiseOnline on, the server registers with master.openra.net and shows
-# up in everyone's server browser, so nobody needs to type an address.
+# A value in .env is substituted into this file — it is not handed to the
+# container by itself. That is why each setting appears twice: once as ${...}
+# and once as the environment variable launch-dedicated.sh actually reads.
+#
+# On Coolify, deploy this as a Docker Compose resource and map the port as a raw
+# TCP port. There is no HTTP endpoint to route: the server speaks OpenRA's own
+# protocol, so a domain and a reverse proxy have nothing to do here. Coolify's
+# own environment-variable panel feeds the same ${...} names, so a deployment
+# there needs no .env file at all.
 
 services:
   server:
@@ -24,29 +32,46 @@ services:
     # kill. Nothing is lost: game state lives in the clients.
     stop_grace_period: 10s
 
+    # Published and listened-on ports come from one variable on purpose. They
+    # have to agree — the server advertises the port it was told to listen on,
+    # and a client dialling the other one reaches nothing.
     ports:
-      - "1234:1234/tcp"
+      - "${TCD_PORT:-1234}:${TCD_PORT:-1234}/tcp"
 
     volumes:
       - content:/data
 
     environment:
       # Every variable here is one launch-dedicated.sh reads.
-      Name: "Gazi Siber TCD Server"
-      Mod: "ra"
+
+      # What the server browser shows. This is the one worth setting.
+      Name: "${TCD_SERVER_NAME:-TCD Dedicated}"
+
+      ListenPort: "${TCD_PORT:-1234}"
 
       # Empty means the server picks one. Set a map UID to pin it.
-      Map: ""
+      Map: "${TCD_MAP:-}"
 
-      ListenPort: "1234"
-      AdvertiseOnline: "True"
+      # Empty means anyone can join.
+      Password: "${TCD_PASSWORD:-}"
+
+      # With this on, the server registers with master.openra.net and appears in
+      # everyone's server browser, so nobody needs to type an address.
+      AdvertiseOnline: "${TCD_ADVERTISE_ONLINE:-True}"
+
+      # Restricts the lobby to players with an OpenRA forum account.
+      RequireAuthentication: "${TCD_REQUIRE_AUTHENTICATION:-False}"
+
+      # Lets one player start a game alone. Off keeps a public lobby waiting for
+      # a second player rather than being consumed by whoever arrives first.
+      EnableSingleplayer: "${TCD_ENABLE_SINGLEPLAYER:-False}"
+
+      # Replays land in the volume and are never cleaned up.
+      RecordReplays: "${TCD_RECORD_REPLAYS:-False}"
+
+      # Below here are settings a deployment has no reason to differ on.
+      Mod: "ra"
       AdvertiseOnLocalNetwork: "False"
-
-      Password: ""
-      RequireAuthentication: "False"
-
-      EnableSingleplayer: "True"
-      RecordReplays: "False"
       EnableSyncReports: "False"
       EnableGeoIP: "True"
       EnableLintChecks: "True"
