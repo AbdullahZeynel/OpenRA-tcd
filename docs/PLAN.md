@@ -664,91 +664,136 @@ command-bar container in `mods/ra/chrome/ingame-player.yaml`.
 
 ---
 
-## 9. Eight sprints
+## 9. Sprints
 
 Each sprint ends with something you can launch and play. No sprint leaves the
 game unbuildable. One GitHub milestone per sprint, and **no work starts on sprint
 N+1 while sprint N is open** — that's L1 at project scale.
 
-### Sprint 00 — Constitution *(first, always)*
+### What actually happened
 
-Fork, clone, pin the engine commit in `ENGINE_BASE`. Write
-`CONTRIBUTING.md`, `AGENTS.md`, `CLAUDE.md`, the PR and issue templates,
-`protected-paths.txt` and `CODEOWNERS`. Stand up the CI workflow with all nine
-jobs. Seed `docs/ENGINE-NOTES.md`. Commit `docs/PLAN.md`.
+The record below is the work as it landed, which is not how this section first
+imagined it. Formations turned out to be one sprint rather than two, squad
+reproduction moved up, and the squad-UX polish slipped. The plan bends. The
+record does not get rewritten to match the plan.
 
-Then prove it works: open a deliberately bad PR that touches an undeclared file,
-and watch the scope job reject it.
+| Sprint | Landed as | PR |
+|---|---|---|
+| 00 — Constitution | `AGENTS.md`, `CONTRIBUTING.md`, `CLAUDE.md`, PR and issue templates, `protected-paths.txt`, `CODEOWNERS`, the TCD Rules workflow, `ENGINE_BASE`, a seeded engine-notes ledger | #1 |
+| 01 — Ground truth | The `OpenRA.Mods.Tcd` project, wired into `OpenRA.slnx` and the `Assemblies:` line of `mods/ra/mod.yaml`, proving the dll loads | #2 |
+| 02 + 03 — Squads | `SquadManager`, `TcdSelection`, form and disband hotkeys, the Alt+click escape hatch, dead-actor pruning, command-bar buttons and the icon sheet | #3 |
+| 04 — Formations | `FormationRole` on 19 RA actors, `FormationPlanner`, Grid and Wedge, the drawn line (V), the marked shape (G), the collapsible tool tray, geometry tests | #5 |
+| 05 — Squad rebuild | `SquadComposition`, `SquadProduction`, `SquadRecruiter`, the rebuild button and Ctrl+R | #7 |
+| — | The five production and trait-location facts sprint 05 rested on, written into the ledger | #9 |
 
-**Done when** a PR that breaks a rule goes red on its own, with no human noticing
-it first.
+Shipped as **0.1.0**: a Red Alert AppImage on the releases page.
 
-### Sprint 01 — Ground truth *(one evening)*
+**Owed, not delivered.** The squad badge over each member, add-to and
+remove-from squad, the cycle-squads camera key, and squad membership surviving a
+game save. That was sprint 03's back half. It is still wanted; it is sprint 09.
 
-Install the matching .NET SDK, build, launch vanilla RA from your own source
-tree. Create the empty `OpenRA.Mods.Tcd` project, wire it into `OpenRA.slnx` and
-`mods/ra/mod.yaml`'s `Assemblies:` line, add one do-nothing trait to prove the
-mod loads your dll.
+### Sprint 06 — Housekeeping
 
-**Done when** the game launches from your fork and a deliberately broken value in
-your own trait produces a startup error naming your class.
+The README still describes OpenRA rather than this fork. The changelog stops at
+sprint 00. `AGENTS.md` section 7 names an upstream file we never edited and
+omits one we did. `ci.yml` runs its build on push but not on pull requests to
+`tcd`, so the checks gating a PR are thinner than they look.
 
-### Sprint 02 — Squads, minimum viable
+**Done when** a stranger landing on the repo can tell what it is inside one
+screen, the changelog covers every merged PR, section 7 matches a real diff of
+`ENGINE_BASE` against `tcd`, and a PR to `tcd` is gated by the full build.
 
-`SquadManager` and `TcdSelection`. Two hotkeys: form squad, disband squad.
-Alt+click escape hatch. Dead-unit pruning.
+### Sprint 07 — Maps
 
-**Done when** you can box-select six riflemen, press one key, click one of them
-anywhere on the map, and all six light up.
+Red Alert ships 74 map folders and 38 of them are campaign missions, so the
+skirmish rotation is thin. That is the problem players actually feel.
 
-### Sprint 03 — Squad UX
+Most of the machinery is already in the engine, and a play test confirmed the
+part that mattered: a map generated in the lobby reaches every client, because
+OpenRA sends the generation recipe rather than the map file and each client
+builds an identical copy. There is no transfer and no wait. Community maps
+download by hash from the Resource Center when a server uses one.
 
-A squad badge drawn over each member (copy `WithTextControlGroupDecoration`).
-Add-to and remove-from squad. Cycle-squads camera key. Squad survives a game save
-via `IGameSaveTraitData`. Command-bar buttons for form and disband, tooltips
-wired through a new `fluent` file.
+What is missing is the tuning. The generator exposes `Players: 2, 4, 6, 8, 10,
+12, 14, 16` and roughly seventy other parameters, all at their generic defaults,
+so a balanced eight-player map means setting a wall of options by hand every
+time.
 
-**Done when** you play a full skirmish using squads instead of control groups and
-don't miss them.
+- `mods/ra/rules/tcd-map-generators.yaml` — our own presets on top of
+  `^MapGenerators`, aimed at the large games this fork gets played in: eight
+  players open, ten players island, narrow passes, open desert. Pure YAML, no C#.
+- A curated map pack. Generate with those presets, play them, throw away the bad
+  ones, and put the survivors in `mods/ra/maps/`. Anything shipped inside the
+  AppImage is on every player's machine with no download and no licence
+  question.
 
-### Sprint 04 — Formations v1
+**Done when** a player opens the map chooser, picks one TCD preset, and gets a
+balanced eight-player map without touching another setting — and the shipped
+pack has enough large maps to run a night of games without repeating one.
 
-`FormationRole` trait, roles tagged on RA's infantry and vehicles.
-`FormationPlanner` with Line and Column. Slot validity against the locomotor.
-Nearest-slot assignment. One hotkey. Unit tests for the pure geometry.
+**Not in this sprint.** An in-game browser for the 23,000 community maps. The
+Resource Center's API documents lookup by hash and by id and nothing else — no
+search, no filter, no pagination — so a browser would need an index we curate and
+host ourselves. Revisit once the presets and the pack are in and we know whether
+anyone still wants it. Bundling community maps is out of the question regardless:
+the Resource Center states no licence, so those maps stay with their authors.
 
-**Done when** a mixed squad of riflemen, grenadiers and rocket soldiers forms a
-line with the rockets at the back, on rough terrain, without anyone standing in a
-cliff — and the geometry tests prove it without launching the game.
+### Sprint 08 — Formation-preserving movement
 
-### Sprint 05 — Formations v2
+Right-clicking a squad that stands in a formation moves it and keeps the shape,
+instead of collapsing everyone onto the destination cell. Slot assignment
+survives the move, the shape rotates to face the direction of travel, and a
+blocked slot falls back the way `FreeCellNear` already does.
 
-Wedge, Box and Screen shapes. Drag-to-place order generator with a ghost preview
-of where each unit will stand. Armour-vs-infantry placement rules. Facing.
+**Done when** a squad in a wedge crosses the map, arrives in a wedge, and the
+same unit still holds the same corner.
 
-**Done when** dragging a line places the squad along it, facing correctly, and
-the preview matches where they actually end up.
+### Sprint 09 — Theme and presentation
 
-### Sprint 06 — Squad reproduction
+The command layer works and looks bolted on. This sprint is about making it look
+like part of the game rather than a mod on top of it: the icon set redrawn to sit
+beside Westwood's sidebar art, the TCD bar's placement and spacing against the
+existing command bar, tooltip wording, the squad badge's typography, and colour
+that matches the faction palettes instead of plain white.
 
-Composition snapshot. Queue resolution and `StartProduction` batching.
-Rally-point gathering plus `SquadRecruiter` auto-enrolment. Failure reporting
-when you can't afford it or lack prerequisites. Sync boundary documented in the
-PR.
+**Done when** somebody who has played Red Alert cannot tell at a glance which
+buttons we added.
 
-**Done when** you lose a squad, press one button, and eight correct units queue
-up and walk to the gather point as a new squad.
+### Sprint 10 — Nix flake
 
-### Sprint 07 — Polish and open the doors
+`flake.nix` at the repo root. A `devShells.default` carrying the .NET 10 SDK,
+SDL2, OpenAL, lua5.1 and freetype, and a `packages.default` built with
+`buildDotnetModule`. Tracked as issue #8.
 
-Proper command-bar icon art (new sprite regions or your own PNG in
-`mods/ra/uibits/`). Every hotkey rebindable and conflict-free in the in-game
-hotkey browser. README with screenshots and a demo clip. A tagged release.
-`good-first-issue` labels on five real, well-described tasks so an outside
-contributor has somewhere to land.
+**Done when** `nix develop` gives a shell where `make check && make tests && make`
+all pass, `nix build` produces something that launches, and the README documents
+both.
 
-**Done when** a stranger can clone the repo, follow the README, play it, and find
-a task they could plausibly pick up.
+### Sprint 11 — Squad UX, the half sprint 03 owed
+
+The squad badge drawn over each member (copy `WithTextControlGroupDecoration`),
+add-to and remove-from squad, a cycle-squads camera key, and squad membership
+surviving a game save through `IGameSaveTraitData`.
+
+**Done when** you play a full skirmish using squads instead of control groups
+and do not miss them.
+
+### Sprint 12 — Release engineering
+
+Move packaging off a laptop. `packaging/linux/buildpackage.sh` builds cnc and
+d2k on every run and we comment those two lines out by hand each time; make it
+build the Red Alert AppImage alone. Then turn `packaging.yml` into something
+that tags, builds and publishes for us.
+
+**Done when** pushing a release tag produces a downloadable AppImage with nobody
+opening a terminal.
+
+### Not planned, deliberately
+
+Native distribution packages — `.deb`, `.rpm`, a `PKGBUILD` — and a Windows
+installer. `packaging/` supports none of them, upstream OpenRA ships none of
+them either, and the AppImage already runs on every distribution, NixOS
+included through `appimage-run`. Revisit if somebody asks.
 
 ---
 
