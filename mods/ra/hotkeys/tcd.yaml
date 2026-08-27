@@ -17,3 +17,8 @@ FormationDraw: V
 	Description: hotkey-description-formationdraw
 	Types: Squads
 	Contexts: player
+
+RebuildSquad: R Ctrl
+	Description: hotkey-description-rebuildsquad
+	Types: Squads
+	Contexts: player

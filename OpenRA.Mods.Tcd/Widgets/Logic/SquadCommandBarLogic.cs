@@ -10,6 +10,7 @@
 #endregion
 
 using OpenRA.Mods.Common.Widgets;
+using OpenRA.Mods.Tcd.Production;
 using OpenRA.Mods.Tcd.Traits;
 using OpenRA.Widgets;
 
@@ -31,14 +32,24 @@ namespace OpenRA.Mods.Tcd.Widgets.Logic
 					TextNotificationsManager.Debug($"Squad {squad.Id} formed: {squad.Members.Count} units.");
 			};
 
-			var disband = widget.Get<ButtonWidget>("DISBAND_SQUAD");
-			disband.IsDisabled = () => squads == null || world.Selection.Actors.Count == 0;
-			disband.OnClick = () =>
+			var disband = widget.GetOrNull<ButtonWidget>("DISBAND_SQUAD");
+			if (disband != null)
 			{
-				var disbanded = squads.DisbandContaining(world.Selection.Actors);
-				if (disbanded > 0)
-					TextNotificationsManager.Debug($"Disbanded {disbanded} squad(s).");
-			};
+				disband.IsDisabled = () => squads == null || world.Selection.Actors.Count == 0;
+				disband.OnClick = () =>
+				{
+					var disbanded = squads.DisbandContaining(world.Selection.Actors);
+					if (disbanded > 0)
+						TextNotificationsManager.Debug($"Disbanded {disbanded} squad(s).");
+				};
+			}
+
+			var rebuild = widget.GetOrNull<ButtonWidget>("REBUILD_SQUAD");
+			if (rebuild == null)
+				return;
+
+			rebuild.IsDisabled = () => squads?.CompositionToRebuild(world.Selection.Actors) == null;
+			rebuild.OnClick = () => SquadRebuild.Execute(world);
 		}
 	}
 }

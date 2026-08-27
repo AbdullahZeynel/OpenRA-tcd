@@ -2,6 +2,7 @@
 
 hotkey-description-formsquad = Form Squad
 hotkey-description-disbandsquad = Disband Squad
+hotkey-description-rebuildsquad = Rebuild Squad
 hotkey-description-formationpoints = Formation: mark a shape
 hotkey-description-formationdraw = Formation: draw a line
 
@@ -32,3 +33,7 @@ button-formation-line =
 button-formation-shape =
     .tooltip = Mark a Shape
     .tooltipdesc = Right click to mark corners, then press this again to close the shape and place the units. Same as holding G.
+
+button-squad-rebuild =
+    .tooltip = Rebuild Squad
+    .tooltipdesc = Queue the selected squad's exact composition again. New units come out at their factory's rally point and group into a fresh squad once they are all built. Press it several times to order several squads. Same as Ctrl+R.

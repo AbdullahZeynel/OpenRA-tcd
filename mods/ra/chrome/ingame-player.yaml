@@ -3,8 +3,9 @@ Container@PLAYER_WIDGETS:
 	Children:
 		Container@CHAT_ROOT:
 		LogicKeyListener@PLAYER_KEYHANDLER:
-			Logic: RemoveFromControlGroupHotkeyLogic, FormSquadHotkeyLogic, DisbandSquadHotkeyLogic, FormationInputLogic
+			Logic: RemoveFromControlGroupHotkeyLogic, FormSquadHotkeyLogic, DisbandSquadHotkeyLogic, RebuildSquadHotkeyLogic, FormationInputLogic
 				RemoveFromControlGroupKey: RemoveFromControlGroup
+				RebuildSquadKey: RebuildSquad
 				FormSquadKey: FormSquad
 				DisbandSquadKey: DisbandSquad
 				FormationPointsKey: FormationPoints
@@ -232,9 +233,9 @@ Container@PLAYER_WIDGETS:
 							ImageCollection: tcd-icons
 							ImageName: tcd-toggle
 				Container@TCD_TRAY:
-					X: -190
+					X: -228
 					Y: -34
-					Width: 224
+					Width: 262
 					Height: 26
 					Visible: false
 					Children:
@@ -272,9 +273,26 @@ Container@PLAYER_WIDGETS:
 									Y: 1
 									ImageCollection: tcd-icons
 									ImageName: disband-squad
-						Button@FORMATION_GRID:
+						Button@REBUILD_SQUAD:
 							Logic: AddFactionSuffixLogic
 							X: 76
+							Width: 34
+							Height: 26
+							VisualHeight: 0
+							Background: command-button
+							TooltipText: button-squad-rebuild.tooltip
+							TooltipDesc: button-squad-rebuild.tooltipdesc
+							TooltipContainer: TOOLTIP_CONTAINER
+							TooltipTemplate: BUTTON_WITH_DESC_HIGHLIGHT_TOOLTIP
+							Children:
+								Image@ICON:
+									X: 5
+									Y: 1
+									ImageCollection: tcd-icons
+									ImageName: rebuild-squad
+						Button@FORMATION_GRID:
+							Logic: AddFactionSuffixLogic
+							X: 114
 							Width: 34
 							Height: 26
 							VisualHeight: 0
@@ -291,7 +309,7 @@ Container@PLAYER_WIDGETS:
 									ImageName: formation-grid
 						Button@FORMATION_WEDGE:
 							Logic: AddFactionSuffixLogic
-							X: 114
+							X: 152
 							Width: 34
 							Height: 26
 							VisualHeight: 0
@@ -308,7 +326,7 @@ Container@PLAYER_WIDGETS:
 									ImageName: formation-wedge
 						Button@FORMATION_LINE:
 							Logic: AddFactionSuffixLogic
-							X: 152
+							X: 190
 							Width: 34
 							Height: 26
 							VisualHeight: 0
@@ -325,7 +343,7 @@ Container@PLAYER_WIDGETS:
 									ImageName: formation-line
 						Button@FORMATION_SHAPE:
 							Logic: AddFactionSuffixLogic
-							X: 190
+							X: 228
 							Width: 34
 							Height: 26
 							VisualHeight: 0

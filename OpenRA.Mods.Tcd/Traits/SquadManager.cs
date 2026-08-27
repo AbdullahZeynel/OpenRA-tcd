@@ -12,6 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OpenRA.Mods.Tcd.Production;
 using OpenRA.Traits;
 
 namespace OpenRA.Mods.Tcd.Traits
@@ -43,10 +44,15 @@ namespace OpenRA.Mods.Tcd.Traits
 		public IReadOnlyList<Actor> Members => members;
 		public bool IsEmpty => members.Count == 0;
 
+		// Captured up front: by the time you want to rebuild a squad, its members are
+		// usually dead and there is nothing left to read the composition from.
+		public IReadOnlyDictionary<string, int> Composition { get; }
+
 		public Squad(int id, List<Actor> members)
 		{
 			Id = id;
 			this.members = members;
+			Composition = SquadComposition.Of(members.Select(a => a.Info.Name));
 		}
 
 		public bool Contains(Actor a) { return members.Contains(a); }
@@ -73,6 +79,9 @@ namespace OpenRA.Mods.Tcd.Traits
 		}
 
 		public IReadOnlyList<Squad> Squads => squads;
+
+		// Survives the squad itself, so a wiped-out squad can still be rebuilt.
+		public IReadOnlyDictionary<string, int> LastComposition { get; private set; }
 
 		public int FormationSpacingCells => info.FormationSpacingCells;
 
@@ -115,7 +124,19 @@ namespace OpenRA.Mods.Tcd.Traits
 
 			var squad = new Squad(nextId++, members);
 			squads.Add(squad);
+			LastComposition = squad.Composition;
 			return squad;
+		}
+
+		// The squad the selection belongs to, or the last one formed if the selection
+		// is not in one - which is the case right after a squad has been wiped out.
+		public IReadOnlyDictionary<string, int> CompositionToRebuild(IEnumerable<Actor> selection)
+		{
+			foreach (var a in selection)
+				if (TryGetSquad(a, out var squad))
+					return squad.Composition;
+
+			return LastComposition;
 		}
 
 		public int DisbandContaining(IEnumerable<Actor> actors)

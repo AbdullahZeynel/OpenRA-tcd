@@ -24,3 +24,5 @@ tcd-icons:
 		formation-shape-disabled: 120, 24, 24, 24
 		tcd-toggle: 144, 0, 24, 24
 		tcd-toggle-disabled: 144, 24, 24, 24
+		rebuild-squad: 168, 0, 24, 24
+		rebuild-squad-disabled: 168, 24, 24, 24

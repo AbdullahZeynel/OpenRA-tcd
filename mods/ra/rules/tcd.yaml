@@ -10,6 +10,12 @@
 	SquadManager:
 	FormationCapture:
 
+# SquadRecruiter watches production, which the map editor never does. It declares
+# SystemActors.World, so it goes on World alone rather than on ^BaseWorld, which
+# EditorWorld also inherits.
+World:
+	SquadRecruiter:
+
 # Formation roles. Rank 0 is the front of the formation; higher ranks stand behind.
 # Anything without this trait is treated as Line, rank 1.
 
