@@ -51,18 +51,30 @@ jobs:
 
           echo "Declared:"; sed 's/^/  /' /tmp/declared.txt
 
+          # A declared line is a shell pattern. A plain path has no wildcards and so
+          # matches only itself; a line like mods/ra/maps/tcd-* covers a directory of
+          # generated assets, which a per-file manifest cannot express at any sane length.
           fail=0
+          : > /tmp/used.txt
           while IFS= read -r f; do
             [ -z "$f" ] && continue
-            if ! grep -Fxq -- "$f" /tmp/declared.txt; then
+            matched=""
+            while IFS= read -r d; do
+              [ -z "$d" ] && continue
+              case "$f" in $d) matched="$d"; break;; esac
+            done < /tmp/declared.txt
+            if [ -n "$matched" ]; then
+              echo "$matched" >> /tmp/used.txt
+            else
               echo "::error file=$f::L2 - changed but not declared in the scope block."
               fail=1
             fi
           done < /tmp/changed.txt
 
+          sort -u /tmp/used.txt -o /tmp/used.txt
           while IFS= read -r d; do
             [ -z "$d" ] && continue
-            if ! grep -Fxq -- "$d" /tmp/changed.txt; then
+            if ! grep -Fxq -- "$d" /tmp/used.txt; then
               echo "::warning::Declared but not changed: $d"
             fi
           done < /tmp/declared.txt
