@@ -32,7 +32,7 @@ services:
 
     environment:
       # Every variable here is one launch-dedicated.sh reads.
-      Name: "TCD Dedicated"
+      Name: "Gazi Siber TCD Server"
       Mod: "ra"
 
       # Empty means the server picks one. Set a map UID to pin it.
@@ -45,7 +45,7 @@ services:
       Password: ""
       RequireAuthentication: "False"
 
-      EnableSingleplayer: "False"
+      EnableSingleplayer: "True"
       RecordReplays: "False"
       EnableSyncReports: "False"
       EnableGeoIP: "True"
