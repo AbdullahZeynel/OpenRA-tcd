@@ -213,3 +213,64 @@ holds is **corrected, not deleted** — note what changed and when.
 - **Verified by:** @AbdullahZeynel - 2026-08-26
 - **Used by:** F2 (drawn formations)
 
+
+## Production queues are found by category, not by name
+
+- **Claim:** `AIUtils.FindQueuesByCategory(Player)` returns an
+  `ILookup<string, ProductionQueue>` keyed by queue type. It is the same helper
+  the bot modules use, so it is the supported route from a unit type to the
+  queues that can build it.
+- **Source:** OpenRA.Mods.Common/AIUtils.cs:38; called from
+  OpenRA.Mods.Common/Traits/BotModules/BaseBuilderBotModule.cs:345
+- **Verified against:** f7dbaa1b
+- **Verified by:** @AbdullahZeynel - 2026-08-26
+- **Used by:** F3 (squad rebuild)
+
+## Queueing production goes through Order.StartProduction
+
+- **Claim:** `Order.StartProduction(Actor subject, string item, int count, bool queued = true)`
+  is the order the sidebar itself issues. `subject` is the queue's actor, not the
+  factory. Anything queued this way follows the normal production path.
+- **Source:** OpenRA.Game/Network/Order.cs:295
+- **Verified against:** f7dbaa1b
+- **Verified by:** @AbdullahZeynel - 2026-08-26
+- **Used by:** F3 (squad rebuild)
+
+## INotifyOtherProduction lives in OpenRA.Mods.Common
+
+- **Claim:** `INotifyOtherProduction` is declared in `OpenRA.Mods.Common.Traits`,
+  not `OpenRA.Traits`. Its single member is
+  `void UnitProducedByOther(Actor self, Actor producer, Actor produced, string productionType, TypeDictionary init)`.
+- **Source:** OpenRA.Mods.Common/TraitsInterfaces.cs:152
+- **Verified against:** f7dbaa1b
+- **Verified by:** @AbdullahZeynel - 2026-08-26
+- **Used by:** F3 (squad rebuild)
+
+## A production queue accepts items the player cannot afford
+
+- **Claim:** `ProductionQueueInfo.PayUpFront` defaults to `false`, and nothing
+  under `mods/ra` overrides it. With it off, the queue accepts an item whatever
+  the player's cash is and drains money as it arrives. Every cash check in the
+  queue is guarded by `PayUpFront`. Money slows a rebuild down; it never rejects
+  one.
+- **Source:** OpenRA.Mods.Common/Traits/Player/ProductionQueue.cs:43 (the
+  default), :415 and :493 (the guarded cash checks)
+- **Verified against:** f7dbaa1b
+- **Verified by:** @AbdullahZeynel - 2026-08-26
+- **Used by:** F3 (squad rebuild)
+
+## ^BaseWorld reaches the map editor, and TraitLocation is enforced
+
+- **Claim:** In RA, `World:` and `EditorWorld:` both inherit `^BaseWorld`. A
+  trait declared `[TraitLocation(SystemActors.World)]` and added to `^BaseWorld`
+  therefore lands on the editor world too and fails the `CheckTraitLocation`
+  lint with "`X` does not belong on `editorworld`. It is a system trait meant
+  for World." Such a trait goes under `World:` on its own.
+- **Note:** the check runs in `make test`, not in `make check`. A green
+  `make check` locally says nothing about it; CI catches it.
+- **Source:** OpenRA.Mods.Common/Lint/CheckTraitLocation.cs:36;
+  mods/ra/rules/world.yaml:161 (`World: Inherits: ^BaseWorld`) and :302
+  (`EditorWorld: Inherits: ^BaseWorld`)
+- **Verified against:** f7dbaa1b
+- **Verified by:** @AbdullahZeynel - 2026-08-26
+- **Used by:** F3 (SquadRecruiter)
