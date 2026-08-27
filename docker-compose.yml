@@ -1,0 +1,60 @@
+# Tactics & Command Dynamics dedicated server.
+#
+#     docker compose up -d --build
+#
+# On Coolify, deploy this as a Docker Compose resource and map port 1234 as a
+# raw TCP port. There is no HTTP endpoint to route: the server speaks OpenRA's
+# own protocol, so a domain and a reverse proxy have nothing to do here.
+#
+# With AdvertiseOnline on, the server registers with master.openra.net and shows
+# up in everyone's server browser, so nobody needs to type an address.
+
+services:
+  server:
+    build:
+      context: .
+      args:
+        # The release tag your players run. A mismatch here and their AppImage
+        # cannot join: OpenRA refuses a client on a different version.
+        VERSION: "${TCD_VERSION:-release-tcd-0.2.0}"
+    image: openra-tcd-server
+    restart: unless-stopped
+
+    # launch-dedicated.sh loops rather than forwarding signals, so a stop is a
+    # kill. Nothing is lost: game state lives in the clients.
+    stop_grace_period: 10s
+
+    ports:
+      - "1234:1234/tcp"
+
+    volumes:
+      - content:/data
+
+    environment:
+      # Every variable here is one launch-dedicated.sh reads.
+      Name: "TCD Dedicated"
+      Mod: "ra"
+
+      # Empty means the server picks one. Set a map UID to pin it.
+      Map: ""
+
+      ListenPort: "1234"
+      AdvertiseOnline: "True"
+      AdvertiseOnLocalNetwork: "False"
+
+      Password: ""
+      RequireAuthentication: "False"
+
+      EnableSingleplayer: "False"
+      RecordReplays: "False"
+      EnableSyncReports: "False"
+      EnableGeoIP: "True"
+      EnableLintChecks: "True"
+      ShareAnonymizedIPs: "True"
+
+      # Game content, replays and downloaded maps. The entrypoint fills this on
+      # first start.
+      SupportDir: "/data/"
+
+volumes:
+  content:
