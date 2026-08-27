@@ -28,6 +28,13 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ hashFiles('**/*.csproj', 'Directory.Build.props') }}
+          restore-keys: nuget-
+
       - name: Check Code
         run: |
           make check
@@ -35,9 +42,19 @@ jobs:
 
       - name: Check Mods
         run: |
-          sudo apt-get install lua5.1
+          sudo apt-get install -y lua5.1
           make check-scripts
-          make TREAT_WARNINGS_AS_ERRORS=true test
+
+          # `make test` depends on `all`, so it compiles the whole engine a second
+          # time in Release, and then validates Tiberian Sun, Dune 2000, Tiberian
+          # Dawn and Red Alert. This fork ships Red Alert alone, and `make check`
+          # has already left a build in bin/, so the second compile and six of the
+          # eight checks are work nobody reads. Run the two that matter.
+          #
+          # TREAT_WARNINGS_AS_ERRORS is what make would have put in the
+          # environment; setting it keeps the checks exactly as strict.
+          TREAT_WARNINGS_AS_ERRORS=true ./utility.sh ra-content --check-yaml
+          TREAT_WARNINGS_AS_ERRORS=true ./utility.sh ra --check-yaml
 
   windows:
     name: Windows (.NET 10.0)
