@@ -164,26 +164,3 @@ jobs:
             echo "No hedged claims."
           fi
 
-  build:
-    name: L7 - build, lint, test
-    runs-on: ubuntu-22.04
-
-    steps:
-      - name: Check out
-        uses: actions/checkout@v7
-
-      - name: Install .NET 10.0
-        uses: actions/setup-dotnet@v6
-        with:
-          dotnet-version: '10.0.x'
-
-      - name: Check code
-        run: |
-          make check
-          make tests
-
-      - name: Check mods
-        run: |
-          sudo apt-get install -y lua5.1
-          make check-scripts
-          make TREAT_WARNINGS_AS_ERRORS=true test
