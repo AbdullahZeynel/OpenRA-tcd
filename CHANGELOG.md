@@ -5,7 +5,10 @@ Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## [Unreleased]
 
-Nothing yet.
+### Added
+- A containerised dedicated server: `Dockerfile`, `docker-compose.yml` and an
+  entrypoint that fetches the Red Alert content on first start. One TCP port,
+  one volume, deployable on Coolify.
 
 ## [0.2.0] — 2026-08-27
 

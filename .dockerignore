@@ -1,0 +1,16 @@
+# Build inputs only. Everything here is either rebuilt inside the image or has
+# no business in it.
+
+.git
+.github
+.vscode
+.kateproject
+
+bin
+obj
+**/bin
+**/obj
+
+*.AppImage
+*.oramap
+tcd-maps*
