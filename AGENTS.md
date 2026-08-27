@@ -366,7 +366,7 @@ Cut one when there is something worth playing.
    date, and open a fresh empty `[Unreleased]`.
 3. Build the Red Alert AppImage. `packaging/linux/buildpackage.sh` builds cnc and
    d2k as well; comment those two lines out for the build and restore the file
-   with `git checkout --` afterwards. Sprint 12 removes this step.
+   with `git checkout --` afterwards. Sprint 13 removes this step.
 4. Launch it and play one skirmish. A release nobody launched is a rumour.
 5. Tag `tcd-x.y.z`, push the tag, publish the release with the AppImage attached
    and the changelog section as its notes.

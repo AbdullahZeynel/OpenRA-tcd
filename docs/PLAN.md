@@ -690,7 +690,7 @@ Shipped as **0.1.0**: a Red Alert AppImage on the releases page.
 
 **Owed, not delivered.** The squad badge over each member, add-to and
 remove-from squad, the cycle-squads camera key, and squad membership surviving a
-game save. That was sprint 03's back half. It is still wanted; it is sprint 09.
+game save. That was sprint 03's back half. It is still wanted; it is sprint 12.
 
 ### Sprint 06 — Housekeeping
 
@@ -745,7 +745,33 @@ authors. A server can already advertise a map pool that clients download from,
 which covers most of the want.
 
 
-### Sprint 08 — Formation-preserving movement
+### Sprint 08 — A dedicated server anyone can join
+
+Playing together means one of you hosting, which means that person being online
+and their router forwarding a port. A dedicated server removes both.
+
+`launch-dedicated.sh` already takes its whole configuration from environment
+variables, so this is packaging rather than engineering:
+
+- `Dockerfile` — builds with the .NET SDK image, runs on the runtime image,
+  carrying `bin/`, `mods/` and the upstream launch script.
+- `docker/entrypoint.sh` — Red Alert's `.mix` files are Westwood's and are never
+  committed here, so the container fetches OpenRA's freeware package on first
+  start, checks it against the SHA1 recorded in
+  `mods/ra-content/installer/downloads.yaml`, and unpacks it into a volume.
+- `docker-compose.yml` — one service, TCP 1234, one volume.
+
+The server speaks OpenRA's protocol rather than HTTP, so none of it belongs
+behind a reverse proxy. On a host running Caddy the game port is published
+directly and Caddy carries on serving HTTP for everything else; routing raw TCP
+through Caddy would need the layer4 plugin and buys nothing. `AdvertiseOnline`
+registers the server with master.openra.net, so players find it in the browser
+instead of typing an address.
+
+**Done when** a friend opens the multiplayer browser, sees the server, joins, and
+plays a TCD map with nobody hosting.
+
+### Sprint 09 — Formation-preserving movement
 
 Right-clicking a squad that stands in a formation moves it and keeps the shape,
 instead of collapsing everyone onto the destination cell. Slot assignment
@@ -755,7 +781,7 @@ blocked slot falls back the way `FreeCellNear` already does.
 **Done when** a squad in a wedge crosses the map, arrives in a wedge, and the
 same unit still holds the same corner.
 
-### Sprint 09 — Theme and presentation
+### Sprint 10 — Theme and presentation
 
 The command layer works and looks bolted on. This sprint is about making it look
 like part of the game rather than a mod on top of it: the icon set redrawn to sit
@@ -766,7 +792,7 @@ that matches the faction palettes instead of plain white.
 **Done when** somebody who has played Red Alert cannot tell at a glance which
 buttons we added.
 
-### Sprint 10 — Nix flake
+### Sprint 11 — Nix flake
 
 `flake.nix` at the repo root. A `devShells.default` carrying the .NET 10 SDK,
 SDL2, OpenAL, lua5.1 and freetype, and a `packages.default` built with
@@ -776,7 +802,7 @@ SDL2, OpenAL, lua5.1 and freetype, and a `packages.default` built with
 all pass, `nix build` produces something that launches, and the README documents
 both.
 
-### Sprint 11 — Squad UX, the half sprint 03 owed
+### Sprint 12 — Squad UX, the half sprint 03 owed
 
 The squad badge drawn over each member (copy `WithTextControlGroupDecoration`),
 add-to and remove-from squad, a cycle-squads camera key, and squad membership
@@ -785,7 +811,7 @@ surviving a game save through `IGameSaveTraitData`.
 **Done when** you play a full skirmish using squads instead of control groups
 and do not miss them.
 
-### Sprint 12 — Release engineering
+### Sprint 13 — Release engineering
 
 Move packaging off a laptop. `packaging/linux/buildpackage.sh` builds cnc and
 d2k on every run and we comment those two lines out by hand each time; make it
