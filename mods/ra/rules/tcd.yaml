@@ -111,18 +111,15 @@ E4:
 		InvalidTargets: NoAutoTarget
 		Priority: 2
 
+# Tanya gets no priorities. campaign-rules.yaml defines E7.noautotarget, which
+# inherits E7, strips AutoTarget and removes the two priority traits it knows
+# about by name. It cannot know about ours, and AutoTargetPriority requires
+# AutoTarget, so anything added here breaks every campaign map. She is a hero
+# unit taking orders by hand; this is the least useful place for the feature.
 E7:
 	FormationRole:
 		Role: Line
 		Rank: 1
-	AutoTargetPriority@TCD1:
-		ValidTargets: Infantry
-		InvalidTargets: NoAutoTarget
-		Priority: 3
-	AutoTargetPriority@TCD2:
-		ValidTargets: Structure
-		InvalidTargets: NoAutoTarget
-		Priority: 2
 
 SHOK:
 	FormationRole:
