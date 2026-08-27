@@ -5,7 +5,7 @@ on:
     paths-ignore:
       - '*.md'
   pull_request:
-    branches: [ bleed, 'prep-*' ]
+    branches: [ tcd, bleed, 'prep-*' ]
     paths-ignore:
       - '*.md'
       - '*.py'

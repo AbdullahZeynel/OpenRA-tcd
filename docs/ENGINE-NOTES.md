@@ -213,3 +213,115 @@ holds is **corrected, not deleted** — note what changed and when.
 - **Verified by:** @AbdullahZeynel - 2026-08-26
 - **Used by:** F2 (drawn formations)
 
+
+## Production queues are found by category, not by name
+
+- **Claim:** `AIUtils.FindQueuesByCategory(Player)` returns an
+  `ILookup<string, ProductionQueue>` keyed by queue type. It is the same helper
+  the bot modules use, so it is the supported route from a unit type to the
+  queues that can build it.
+- **Source:** OpenRA.Mods.Common/AIUtils.cs:38; called from
+  OpenRA.Mods.Common/Traits/BotModules/BaseBuilderBotModule.cs:345
+- **Verified against:** f7dbaa1b
+- **Verified by:** @AbdullahZeynel - 2026-08-26
+- **Used by:** F3 (squad rebuild)
+
+## Queueing production goes through Order.StartProduction
+
+- **Claim:** `Order.StartProduction(Actor subject, string item, int count, bool queued = true)`
+  is the order the sidebar itself issues. `subject` is the queue's actor, not the
+  factory. Anything queued this way follows the normal production path.
+- **Source:** OpenRA.Game/Network/Order.cs:295
+- **Verified against:** f7dbaa1b
+- **Verified by:** @AbdullahZeynel - 2026-08-26
+- **Used by:** F3 (squad rebuild)
+
+## INotifyOtherProduction lives in OpenRA.Mods.Common
+
+- **Claim:** `INotifyOtherProduction` is declared in `OpenRA.Mods.Common.Traits`,
+  not `OpenRA.Traits`. Its single member is
+  `void UnitProducedByOther(Actor self, Actor producer, Actor produced, string productionType, TypeDictionary init)`.
+- **Source:** OpenRA.Mods.Common/TraitsInterfaces.cs:152
+- **Verified against:** f7dbaa1b
+- **Verified by:** @AbdullahZeynel - 2026-08-26
+- **Used by:** F3 (squad rebuild)
+
+## A production queue accepts items the player cannot afford
+
+- **Claim:** `ProductionQueueInfo.PayUpFront` defaults to `false`, and nothing
+  under `mods/ra` overrides it. With it off, the queue accepts an item whatever
+  the player's cash is and drains money as it arrives. Every cash check in the
+  queue is guarded by `PayUpFront`. Money slows a rebuild down; it never rejects
+  one.
+- **Source:** OpenRA.Mods.Common/Traits/Player/ProductionQueue.cs:43 (the
+  default), :415 and :493 (the guarded cash checks)
+- **Verified against:** f7dbaa1b
+- **Verified by:** @AbdullahZeynel - 2026-08-26
+- **Used by:** F3 (squad rebuild)
+
+## ^BaseWorld reaches the map editor, and TraitLocation is enforced
+
+- **Claim:** In RA, `World:` and `EditorWorld:` both inherit `^BaseWorld`. A
+  trait declared `[TraitLocation(SystemActors.World)]` and added to `^BaseWorld`
+  therefore lands on the editor world too and fails the `CheckTraitLocation`
+  lint with "`X` does not belong on `editorworld`. It is a system trait meant
+  for World." Such a trait goes under `World:` on its own.
+- **Note:** the check runs in `make test`, not in `make check`. A green
+  `make check` locally says nothing about it; CI catches it.
+- **Source:** OpenRA.Mods.Common/Lint/CheckTraitLocation.cs:36;
+  mods/ra/rules/world.yaml:161 (`World: Inherits: ^BaseWorld`) and :302
+  (`EditorWorld: Inherits: ^BaseWorld`)
+- **Verified against:** f7dbaa1b
+- **Verified by:** @AbdullahZeynel - 2026-08-26
+- **Used by:** F3 (SquadRecruiter)
+
+## A generated map travels as a recipe, not as a file
+
+- **Claim:** A map produced by a map generator is shared with the rest of the
+  lobby as its `MapGenerationArgs` — uid, generator, tileset, size, options,
+  title and author — and every client builds an identical copy locally. No
+  `.oramap` crosses the network, and there is no download step. The lobby
+  accepts a map whose status is `Generatable` or `Generating` exactly as it
+  accepts one that is already on disk.
+- **Also:** the source says so itself. `MapGenerationArgs` carries the comment
+  "Title and author are baked into the map.yaml and must agree across all
+  clients, regardless of the local client's language."
+- **Source:** OpenRA.Game/Map/MapGenerationArgs.cs:19;
+  OpenRA.Mods.Common/ServerTraits/LobbyCommands.cs:668;
+  OpenRA.Game/Map/MapPreview.cs:474 (`UpdateFromGenerationArgs`)
+- **Verified against:** f7dbaa1b
+- **Verified by:** @AbdullahZeynel — 2026-08-27, in play: two clients on one
+  machine, a map generated in the lobby, both sides in the same game with no
+  transfer
+- **Used by:** sprint 07 (maps)
+
+## The Resource Center can be queried by hash, and not searched
+
+- **Claim:** OpenRA fetches a missing map from `MapRepository`, which defaults
+  to `https://resource.openra.net/map/`, by requesting
+  `hash/<uid>[,<uid>…]/yaml` in batches of 50. The published Map API documents
+  download by hash, lookup by hash, lookup by id, and the newest map. It
+  documents no endpoint that searches, filters or pages through the catalogue,
+  so an in-game browser cannot be built against it without an index of our own.
+- **Also:** a server can advertise a `MapPool` of uids. Clients in that lobby
+  see the pool in the map chooser and download from it. That is the supported
+  route to putting a curated set of maps in front of players.
+- **Source:** OpenRA.Mods.Common/WebServices.cs:23;
+  OpenRA.Game/Map/MapCache.cs:244; OpenRA.Mods.Common/Widgets/Logic/MapChooserLogic.cs:284;
+  https://github.com/OpenRA/OpenRA-Resources/wiki/MapAPI
+- **Verified against:** f7dbaa1b
+- **Verified by:** @AbdullahZeynel — 2026-08-27
+- **Used by:** sprint 07 (maps)
+
+## The map generator already reaches sixteen players
+
+- **Claim:** RA's `ClassicMapGenerator` exposes a `Players` option offering
+  2, 4, 6, 8, 10, 12, 14 and 16, alongside roughly seventy other parameters
+  covering water and mountain coverage, forest clumpiness, symmetry
+  enforcement, roads, spawn-region reservation, resources per player and
+  expansion sizing. Large-player-count maps need no engine work, only presets.
+- **Source:** mods/ra/rules/map-generators.yaml:232 (the `Players` option) and
+  :248; OpenRA.Mods.Common/Traits/World/ClassicMapGenerator.cs
+- **Verified against:** f7dbaa1b
+- **Verified by:** @AbdullahZeynel — 2026-08-27
+- **Used by:** sprint 07 (maps)

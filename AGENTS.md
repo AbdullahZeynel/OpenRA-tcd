@@ -238,9 +238,23 @@ conversation, not a commit.
 | File | Change |
 |---|---|
 | `mods/ra/mod.yaml` | add `OpenRA.Mods.Tcd.dll` to `Assemblies:`, include our yaml |
-| `mods/ra/rules/world.yaml` | swap `Selection:` for `TcdSelection:`, add `SquadManager:` |
-| `mods/ra/chrome/ingame-player.yaml` | add buttons to `Container@COMMAND_BAR` |
+| `mods/ra/chrome/ingame-player.yaml` | add `Container@TCD_BAR` next to the command bar |
 | `OpenRA.slnx` | reference the `OpenRA.Mods.Tcd` project |
+| `OpenRA.Test/OpenRA.Test.csproj` | reference `OpenRA.Mods.Tcd` so our tests compile |
+
+Our own rules live in `mods/ra/rules/tcd.yaml`, a new file pulled in from
+`mod.yaml`. It overrides `^BaseWorld` from there, so `mods/ra/rules/world.yaml`
+stays untouched. Same pattern for `chrome-tcd.yaml`, `hotkeys/tcd.yaml` and
+`fluent/tcd.ftl`.
+
+To check this table against reality:
+
+```bash
+git diff --name-status "$(cat ENGINE_BASE)" tcd | grep '^M'
+```
+
+Anything it prints that is not in this table or the governance table below is a
+footprint we did not agree to.
 
 ### Permitted upstream edits — governance
 
@@ -249,8 +263,10 @@ conflict during an upstream sync, resolve as **keep ours**.
 
 | File | Why |
 |---|---|
+| `README.md` | the front page has to say what this fork is, not what OpenRA is |
 | `CONTRIBUTING.md` | GitHub surfaces this file to contributors; it must describe *our* rules |
 | `.github/PULL_REQUEST_TEMPLATE.md` | the scope block is mandatory on every PR |
+| `.github/workflows/ci.yml` | one line, so the build gates pull requests to `tcd` |
 
 Upstream's own issue templates are left in place. Ours are added alongside with
 `tcd-` prefixed filenames, so there is nothing to conflict.
@@ -307,6 +323,19 @@ a `Co-Authored-By:` trailer naming the model.
 
 Branch names: `feat/squad-manager`, `fix/squad-prune-on-death`,
 `docs/engine-notes-production`.
+
+### Titles and bodies land in other people's inboxes
+
+Every merge mails the whole thing to everyone watching. Write for someone
+skimming it on a phone.
+
+- Title: imperative, lower case, no full stop, 60 characters at most. The pull
+  request title and the commit title are the same string.
+- **Set the commit title by hand on the squash-merge screen.** GitHub falls back
+  to the branch name when a pull request has more than one commit, which is how
+  `Feat/squad rebuild (#7)` reached the log.
+- Body: one sentence on what changes, then a short line per file that moved.
+  Reasoning belongs in the issue or in review comments.
 
 ---
 
