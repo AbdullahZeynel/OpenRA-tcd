@@ -771,28 +771,110 @@ instead of typing an address.
 **Done when** a friend opens the multiplayer browser, sees the server, joins, and
 plays a TCD map with nobody hosting.
 
-### Sprint 09 — Formation-preserving movement
+### Sprint 09 — Release engineering
 
-Right-clicking a squad that stands in a formation moves it and keeps the shape,
-instead of collapsing everyone onto the destination cell. Slot assignment
-survives the move, the shape rotates to face the direction of travel, and a
-blocked slot falls back the way `FreeCellNear` already does.
+Every release so far has been built on a laptop: comment two lines out of
+`packaging/linux/buildpackage.sh`, run it, restore the file, upload by hand. That
+is four chances to get it wrong, and it ties the artefact to one machine.
 
-**Done when** a squad in a wedge crosses the map, arrives in a wedge, and the
-same unit still holds the same corner.
+- Tagging `tcd-x.y.z` builds the Red Alert AppImage and publishes the release.
+- Merging to `tcd` builds the server image and pushes it to a registry, so the
+  deployment pulls an image rather than compiling from source.
+- `packaging/linux/buildpackage.sh` builds Red Alert alone. This fork has no use
+  for the other two mods, and commenting them out by hand every time is the step
+  this sprint deletes.
 
-### Sprint 10 — Theme and presentation
+The AppImage is not built on every merge. Sixty megabytes per merge is waste, and
+multiplayer needs everyone on one build, so a release stays a deliberate act.
 
-The command layer works and looks bolted on. This sprint is about making it look
-like part of the game rather than a mod on top of it: the icon set redrawn to sit
-beside Westwood's sidebar art, the TCD bar's placement and spacing against the
-existing command bar, tooltip wording, the squad badge's typography, and colour
-that matches the faction palettes instead of plain white.
+**Done when** pushing a tag produces a downloadable AppImage, and merging to `tcd`
+produces a fresh server image, with nobody opening a terminal.
+
+### Sprint 10 — Target priority by role
+
+Send a squad into a crowd today and everyone shoots whatever is nearest. Rocket
+soldiers empty themselves into infantry while riflemen scratch at a tank. Fixing
+that by hand, unit by unit, is the micro tax Red Alert has charged since 1996.
+
+`FormationRole` already knows what each unit is for. Give each role an ordered
+list of what it should shoot at, in YAML: rockets before aircraft and vehicles,
+rifles before infantry, artillery before buildings.
+
+No weapon-versus-armour tables are read. The priority is declared rather than
+derived, so a player can tune it and it stays legible.
+
+**Done when** a mixed squad ordered onto a mixed group of enemies splits its fire
+sensibly with nobody selected individually, and the ordering can be changed
+without touching C#.
+
+### Sprint 11 — Patrol
+
+Three of the things we want turn out to be one thing. A patrol is a unit moving
+between points until told otherwise. A medic holding a zone is a patrol that heals
+what it passes. A scout sweeping the map is a patrol with a wider route. A guard
+is a patrol with a route of one point. OpenRA has no patrol activity, so that is
+the piece to build.
+
+Build the patrol. The other three become configurations of it rather than features
+of their own.
+
+**Done when** a squad given a route walks it indefinitely, resumes it after being
+interrupted by a fight, and a medic on a route keeps a defended area healed with
+no further orders.
+
+### Sprint 12 — A reserve that comes when called
+
+Hold a squad back. When something of yours is attacked within a radius of it, it
+goes, fights, and returns. The engine knows nothing of this, and it is the idea in
+this fork furthest from anything Red Alert ships: not a better way to give an
+order, but an order that keeps being obeyed while you are looking elsewhere.
+
+The hard parts are honest ones. What counts as an attack worth answering, how far
+is too far, and what stops the whole reserve chasing one harvester across the map.
+
+**Done when** a reserve squad defends a base under attack while its owner is
+fighting somewhere else, and returns to its post afterwards.
+
+### Sprint 13 — Factions
+
+Red Alert's five countries differ by one unique unit each, gated behind a
+prerequisite like `~vehicles.england`. `SPY.England` and `AFLD.Ukraine` show that a
+variant of an existing actor is a legitimate unique: the art is shared, the
+statistics are not. Factions are declared on the `World` actor, and this fork
+already has a `World:` node of its own, so none of this touches an upstream file.
+
+| Faction | Side | Identity | Unique |
+|---|---|---|---|
+| Turkey | Allies | Reconnaissance and standoff strike | A drone centre building three UAVs - a scout, a strike drone, a kamikaze drone - and a defensive bonus |
+| Italy | Allies | The sea | Cheaper, faster naval units and an armed landing craft |
+| East Germany | Soviet | Precision and surveillance | A sniper: long range, expensive, slow to fire, and infantry drop to one shot |
+| Poland | Soviet | Raiding | A fast medium tank with thin armour |
+| Cuba | Soviet | Guerrilla | A cheap, lightly armed car with almost no armour |
+
+The sniper needs no new art: `sniper.shp` and its weapon already ship inside
+`mods/ra/maps/fort-lonestar/` as OpenRA's own freely licensed work. The drones did
+need art and it is drawn - `tcd-drone-sprites.py` generates the frames and
+`--png-to-shp` packs them, both waiting on `feat/turkey-drones`. The drone centre
+reuses the helipad the way `AFLD.Ukraine` reuses the airfield.
+
+**One faction at a time.** Balance never finishes, and five untested factions at
+once is five unknowns rather than one. Turkey sets the pattern; the rest follow
+once it has been played.
+
+**Done when** Turkey is selectable, its drones fly, its bonus is felt, and a game
+against it does not feel like a game against a different mod.
+
+### Sprint 14 — Theme and presentation
+
+The command layer works and looks bolted on. Redraw the icon set to sit beside
+Westwood's sidebar art, fix the tray's placement and spacing, settle the tooltip
+wording, give the squad badge some typography, and take colours from the faction
+palettes instead of plain white.
 
 **Done when** somebody who has played Red Alert cannot tell at a glance which
 buttons we added.
 
-### Sprint 11 — Nix flake
+### Sprint 15 — Nix flake
 
 `flake.nix` at the repo root. A `devShells.default` carrying the .NET 10 SDK,
 SDL2, OpenAL, lua5.1 and freetype, and a `packages.default` built with
@@ -802,31 +884,32 @@ SDL2, OpenAL, lua5.1 and freetype, and a `packages.default` built with
 all pass, `nix build` produces something that launches, and the README documents
 both.
 
-### Sprint 12 — Squad UX, the half sprint 03 owed
+### Sprint 16 — Squad UX, the half sprint 03 owed
 
 The squad badge drawn over each member (copy `WithTextControlGroupDecoration`),
 add-to and remove-from squad, a cycle-squads camera key, and squad membership
 surviving a game save through `IGameSaveTraitData`.
 
-**Done when** you play a full skirmish using squads instead of control groups
-and do not miss them.
-
-### Sprint 13 — Release engineering
-
-Move packaging off a laptop. `packaging/linux/buildpackage.sh` builds cnc and
-d2k on every run and we comment those two lines out by hand each time; make it
-build the Red Alert AppImage alone. Then turn `packaging.yml` into something
-that tags, builds and publishes for us.
-
-**Done when** pushing a release tag produces a downloadable AppImage with nobody
-opening a terminal.
+**Done when** you play a full skirmish using squads instead of control groups and
+do not miss them.
 
 ### Not planned, deliberately
 
-Native distribution packages — `.deb`, `.rpm`, a `PKGBUILD` — and a Windows
-installer. `packaging/` supports none of them, upstream OpenRA ships none of
-them either, and the AppImage already runs on every distribution, NixOS
-included through `appimage-run`. Revisit if somebody asks.
+**Formation-preserving movement.** A squad was to keep its shape while crossing
+the map. Planned, then dropped before any code was written: it changes how a walk
+looks rather than how a fight goes, and the geometry it needs is the fiddliest in
+the codebase. Reconsider only if holding a shape turns out to matter for something
+else.
+
+**An in-game browser for community maps.** The Resource Center's API documents
+lookup by hash and by id and nothing else, so a browser would need an index we
+curate and host. A server can already advertise a map pool that clients download
+from, which covers most of the want. Bundling those maps is out of the question
+either way: the site states no licence, so they stay with their authors.
+
+**Native distribution packages and a Windows installer.** `packaging/` supports
+neither, upstream OpenRA ships neither, and the AppImage already runs on every
+distribution, NixOS included through `appimage-run`.
 
 ---
 
