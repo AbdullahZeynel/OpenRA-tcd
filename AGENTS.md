@@ -113,6 +113,17 @@ This one mechanism enforces L1, L2 and L3 at once. Widening scope is legitimate
 and easy: edit the block, say why in a comment, get it re-approved. Sneaking a
 file in is not.
 
+A line may be a shell pattern. A plain path carries no wildcards and matches only
+itself, which is what nearly every entry is. A pattern is for a directory of
+generated assets that a per-file list cannot express at any readable length:
+
+```scope
+mods/ra/maps/tcd-*
+```
+
+Reach for one only when the alternative is hundreds of lines. A pattern that
+covers code is a scope block that has stopped saying anything.
+
 ---
 
 ## 4. Anti-hallucination rules
