@@ -34,7 +34,8 @@ namespace OpenRA.Mods.Tcd.Production
 			if (result.Queued == 0)
 			{
 				TextNotificationsManager.Debug(
-					$"Cannot rebuild {SquadComposition.Describe(composition)}: no factory or missing prerequisites.");
+					$"Cannot rebuild {SquadComposition.Describe(composition)}. Not queued: " +
+					$"{SquadComposition.Describe(result.Rejected)}.");
 				return;
 			}
 
@@ -43,7 +44,8 @@ namespace OpenRA.Mods.Tcd.Production
 			recruiter.Expect(result.Accepted);
 
 			TextNotificationsManager.Debug(result.Rejected.Count > 0
-				? $"Rebuilding {SquadComposition.Describe(result.Accepted)}. Cannot build: {string.Join(", ", result.Rejected)}."
+				? $"Rebuilding {SquadComposition.Describe(result.Accepted)}. " +
+					$"Not queued: {SquadComposition.Describe(result.Rejected)}."
 				: $"Rebuilding squad: {SquadComposition.Describe(result.Accepted)}.");
 		}
 	}
