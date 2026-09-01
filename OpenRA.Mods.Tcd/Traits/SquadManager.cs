@@ -75,7 +75,7 @@ namespace OpenRA.Mods.Tcd.Traits
 			this.info = info;
 
 			// Built once rather than per tick: Tick runs on every frame of every game.
-			isStale = a => a.IsDead || !a.IsInWorld || a.Owner != world.LocalPlayer;
+			isStale = a => a.IsDead || a.Owner != world.LocalPlayer;
 		}
 
 		public IReadOnlyList<Squad> Squads => squads;
