@@ -54,6 +54,27 @@ end of the command bar. All of it is rebindable in the in-game hotkey browser.
 
 ## Play
 
+### Windows x64
+
+For a Windows portable build, extract the entire `OpenRA-TCD-tcd-*-win-x64.zip`
+archive into a writable folder and run `RedAlert.exe`. The .NET runtime and
+native libraries are included; game assets download on first launch.
+Use the same TCD release as the other players.
+
+To create the archive on Linux with .NET 10 SDK, Git, Python 3, zip, tar, and
+curl or wget installed:
+
+```sh
+./packaging/windows/build-tcd.sh tcd-0.2.0 "$PWD/build/windows"
+```
+
+The script exports the named local tag into a temporary directory, so uncommitted
+changes and newer gameplay commits do not enter the package. Its engine version
+is `release-<tag>`, matching the Linux AppImage. It produces a portable ZIP;
+no installer or system-wide installation is needed.
+
+### Linux
+
 Download the AppImage from the
 [releases page](https://github.com/AbdullahZeynel/OpenRA-tcd/releases). It is
 self-contained — .NET, SDL2, OpenAL, Lua and freetype all travel inside it — and
